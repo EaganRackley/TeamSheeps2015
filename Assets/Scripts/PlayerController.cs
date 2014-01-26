@@ -211,6 +211,7 @@ public class PlayerController : MonoBehaviour {
 		else if(deathTimer > deathMoveTimer + DeathColorChangeTime )
 		{
 			Spawn();
+			Application.LoadLevel(Application.loadedLevel);
 		}
 		deathTimer += Time.deltaTime;
 	}
