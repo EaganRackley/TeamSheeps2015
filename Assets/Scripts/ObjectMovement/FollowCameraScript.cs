@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class FollowCameraScript : MonoBehaviour{
+public class FollowCameraScript : TransitionObject {
 
 	public Transform myCameraTransform;
 	public float myFollowSpeed = 1.0f;
@@ -9,10 +9,8 @@ public class FollowCameraScript : MonoBehaviour{
 	// Update is called once per frame
 	void Update () {
 		Vector3 pos = this.transform.position;
-		pos = Vector3.MoveTowards (pos, myCameraTransform.position, myFollowSpeed * Time.fixedDeltaTime);
-		//pos.x = Mathf.Lerp(pos.x, myCameraTransform.position.x, myFollowSpeed * Time.deltaTime);
-		//pos.y = Mathf.Lerp(pos.y, myCameraTransform.position.y, myFollowSpeed * Time.deltaTime);		
-		pos.z = this.transform.position.z;
+		pos.x = Mathf.Lerp(pos.x, myCameraTransform.position.x, myFollowSpeed * Time.deltaTime);
+		pos.y = Mathf.Lerp(pos.y, myCameraTransform.position.y, myFollowSpeed * Time.deltaTime);		
 		this.transform.position = pos;	
 	}
 }
