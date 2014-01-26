@@ -18,6 +18,14 @@ public class PlayerController : MonoBehaviour {
     public float maxSize = 1.4f;
     public float sizeChangeDelta = .1f;
 	
+	public float deathSize = 2.3f;
+	bool deathState = false;
+	float deathTimer = 0f;
+	public Color deathColor;
+	public float DeathColorChangeTime = 3.0f;
+	public float deathMoveTimer = 3.0f;
+	
+	
 	public float groundCheckOffset = 0.2f;
 
 	private CircleCollider2D circCollider;
@@ -49,25 +57,16 @@ public class PlayerController : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 	
+		bMovementAllowed = true;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-//        anim.SetBool("Grounded", grounded);
-		
-        //this will need to be updated
-        //boxCollider.size = ((SpriteRenderer)renderer).sprite.bounds.size;
-		//deflate the size a bit 
-		//boxCollider.size = new Vector2(.7f * boxCollider.size.x, .8f * boxCollider.size.y);
-		//boxCollider.center = ((SpriteRenderer)renderer).sprite.bounds.center;
-
-        //Debug.Log(((SpriteRenderer)renderer).sprite.bounds.min + " " + ((SpriteRenderer)renderer).sprite.bounds.max);
-
-
-        
-        //    //((SpriteRenderer)renderer).sprite.bounds.min.x, ((Transform)groundCollision[0]).position.y, 0);
-        //((Transform)groundCollision[0]).position.Set(((SpriteRenderer)renderer).sprite.bounds.min.x, ((Transform)groundCollision[0]).position.y, 0);
-        //((Transform)groundCollision[2]).position.Set(((SpriteRenderer)renderer).sprite.bounds.max.x, ((Transform)groundCollision[0]).position.y, 0);
+		if(deathState)
+		{
+			DeathAnimation();
+			return;
+		}
 		
 		groundCheck.transform.position = ( new Vector3(transform.position.x ,
         						 transform.position.y - circCollider.radius * transform.localScale.x - groundCheckOffset ,
@@ -91,8 +90,8 @@ public class PlayerController : MonoBehaviour {
 		
         grounded = Physics2D.Linecast(transform.position, groundCheck.position, 1 << LayerMask.NameToLayer("Ground"));
             
-		//if (!bMovementAllowed)
-		//	return;
+		if (!bMovementAllowed)
+			return;
 		
 		float h = Input.GetAxis("Horizontal");
 
@@ -135,16 +134,20 @@ public class PlayerController : MonoBehaviour {
 
     void Grow()
     {
-        if(transform.localScale.x < maxSize)
+      
+		transform.localScale += new Vector3(sizeChangeDelta * Time.deltaTime,
+			sizeChangeDelta * Time.deltaTime,	
+			0);	
+		
+		foreach(Transform part in particles)
 		{
-			transform.localScale += new Vector3(sizeChangeDelta * Time.deltaTime,
-				sizeChangeDelta * Time.deltaTime,	
-				0);	
-			
-			foreach(Transform part in particles)
-			{
-				part.GetComponent<SpringJoint2D>().distance += sizeChangeDelta *Time.deltaTime;
-			}
+			part.GetComponent<SpringJoint2D>().distance += sizeChangeDelta *Time.deltaTime;
+		}
+		
+		if(transform.localScale.x > deathSize)
+		{
+			deathTimer = 0;
+			deathState = true;
 		}
     }
 	
@@ -153,6 +156,20 @@ public class PlayerController : MonoBehaviour {
 		transform.localScale = new Vector3(1.0f, 1.0f, 0.0f);
 		rigidbody2D.velocity = new Vector3();
 		transform.position = GameObject.FindGameObjectWithTag("SpawnPoint").transform.position;	
+		GetComponent<SpriteRenderer>().color = Color.white;
+		
+		bMovementAllowed = true;
+		rigidbody2D.gravityScale = 1;
+		circCollider.enabled = true;
+		foreach(Transform part in particles)
+		{
+			part.GetComponent<SpriteRenderer>().color = Color.white;
+			part.GetComponent<CircleCollider2D>().enabled = true;
+			part.transform.position = GameObject.FindGameObjectWithTag("SpawnPoint").transform.position;	
+		}
+		
+		deathTimer = 0;
+		deathState = false;
 	}
 
 	void Flip()
@@ -169,5 +186,63 @@ public class PlayerController : MonoBehaviour {
 	void EnableControls()
 	{
 		bMovementAllowed = true;
+	}
+	
+	void DeathAnimation()
+	{
+		bMovementAllowed = false;
+		rigidbody2D.gravityScale = 0;
+		foreach(Transform part in particles)
+		{
+			part.rigidbody2D.gravityScale = 0;
+		}
+		if(deathTimer < DeathColorChangeTime)
+		{
+			morphColor();
+			rigidbody2D.velocity = new Vector2();
+		}
+		if(deathTimer > DeathColorChangeTime &&
+			deathTimer < deathMoveTimer + DeathColorChangeTime)
+		{
+			circCollider.enabled = false;
+			
+			transform.position = (transform.position - new Vector3(0.0f, .4f * Time.deltaTime, 0));
+		}
+		else if(deathTimer > deathMoveTimer + DeathColorChangeTime )
+		{
+			Spawn();
+		}
+		deathTimer += Time.deltaTime;
+	}
+	
+	void morphColor()
+	{
+		Color change = GetColor(deathTimer, .3f, 127f, 128);
+			GetComponent<SpriteRenderer>().color = change;
+			foreach(Transform part in particles)
+			{
+				part.GetComponent<SpriteRenderer>().color = change;
+			
+				part.GetComponent<CircleCollider2D>().enabled = false;
+			}
+	}
+	
+	static Color GetColor(float time, float freq1, float w, float c )
+	{
+		return getColorCycleFull(time, freq1, freq1, freq1, w, c);
+	}
+	
+	static Color getColorCycleFull(float increment, float freqR , float freqG, float freqB , float amplitude, float center)
+	{
+		Color retCol = new Color((Mathf.Sin(freqR * increment + 0) * amplitude + center)/255.0f,
+			(Mathf.Sin(freqG * increment + 2) * amplitude + center)/255.0f,
+			(Mathf.Sin(freqB * increment + 4) * amplitude + center)/255.0f,
+			1.0f);
+		//retCol.r = Mathf.Sin(freqR * increment + 0) * amplitude + center;
+		//retCol.b = Mathf.Sin(freqG * increment + 2) * amplitude + center;
+		//retCol.g = Mathf.Sin(freqB * increment + 4) * amplitude + center;
+		//retCol.a = 255;
+		Debug.Log(retCol);
+		return retCol;
 	}
 }
