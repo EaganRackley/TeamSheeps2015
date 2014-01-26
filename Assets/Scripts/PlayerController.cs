@@ -119,17 +119,17 @@ public class PlayerController : MonoBehaviour {
 		}
 	}
 
-    void Shrink()
+        void Shrink()
     {
         if(transform.localScale.x > minSize)
 		{
 			transform.localScale -= new Vector3(sizeChangeDelta * Time.deltaTime,
 				sizeChangeDelta * Time.deltaTime,	
 				0);
-			//for(Transform part in particles)
-			//{
-			//	part.GetComponent<SpringJoint2D>().distance *= 
-			//}
+			foreach(Transform part in particles)
+			{
+				part.GetComponent<SpringJoint2D>().distance -= sizeChangeDelta *Time.deltaTime;
+			}
 		}
     }
 
@@ -140,6 +140,11 @@ public class PlayerController : MonoBehaviour {
 			transform.localScale += new Vector3(sizeChangeDelta * Time.deltaTime,
 				sizeChangeDelta * Time.deltaTime,	
 				0);	
+			
+			foreach(Transform part in particles)
+			{
+				part.GetComponent<SpringJoint2D>().distance += sizeChangeDelta *Time.deltaTime;
+			}
 		}
     }
 	
