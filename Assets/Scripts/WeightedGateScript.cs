@@ -36,7 +36,7 @@ public class WeightedGateScript : MonoBehaviour
 	{
 		if (m_Triggered) 
 		{
-			print ("Player Scale: " + PlayerObject.transform.localScale.x);
+			//print ("Player Scale: " + PlayerObject.transform.localScale.x);
 			Animator animator = GetComponent<Animator>();
 			if(PlayerObject.transform.localScale.x >= 1.2f && PlayerObject.transform.localScale.x < 1.4f)
 			{
