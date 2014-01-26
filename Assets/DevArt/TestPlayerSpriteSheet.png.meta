@@ -1,0 +1,85 @@
+fileFormatVersion: 2
+guid: 35a13dec3c9e47e4595c913c434bc5a3
+TextureImporter:
+  serializedVersion: 2
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    linearTexture: 0
+    correctGamma: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: .25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 0
+  seamlessCubemap: 0
+  textureFormat: -2
+  maxTextureSize: 1024
+  textureSettings:
+    filterMode: -1
+    aniso: 1
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: .5, y: .5}
+  spritePixelsToUnits: 100
+  alphaIsTransparency: 1
+  textureType: 8
+  buildTargetSettings:
+  - buildTarget: iPhone
+    maxTextureSize: 1024
+    textureFormat: -2
+    compressionQuality: 50
+  spriteSheet:
+    sprites:
+    - name: TestPlayerLarge
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 744
+        width: 279
+        height: 280
+      alignment: 0
+      pivot: {x: .5, y: .5}
+    - name: TestPlayerSmallest
+      rect:
+        serializedVersion: 2
+        x: 407
+        y: 954
+        width: 30
+        height: 30
+      alignment: 0
+      pivot: {x: .5, y: .5}
+    - name: TestPlayerMedium
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 666
+        width: 91
+        height: 91
+      alignment: 0
+      pivot: {x: .5, y: .5}
+    - name: TestPlayerSmall
+      rect:
+        serializedVersion: 2
+        x: 366
+        y: 569
+        width: 42
+        height: 42
+      alignment: 0
+      pivot: {x: .5, y: .5}
+  spritePackingTag: 
+  userData: 
