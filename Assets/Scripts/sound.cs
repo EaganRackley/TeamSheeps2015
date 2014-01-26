@@ -5,7 +5,6 @@ using System.Collections;
 public class sound : MonoBehaviour {
 
 	private bool m_hearingSound = false;
-	private float m_soundVolume = 0;
 	private float m_maxSoundVolume = 0;
 	private AudioSource m_AudioSrc;
 	// Use this for initialization
