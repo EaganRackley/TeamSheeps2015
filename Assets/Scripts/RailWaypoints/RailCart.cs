@@ -11,6 +11,7 @@ public class RailCart : MonoBehaviour
 	public float mainCameraOrth = Camera.main.orthographicSize;
 	public bool ChangeCameraTarget = false;
 	public float CameraSizeSpeed = 1.0f;
+	public float MaxCameraSize = 25.0f;
 
 	// Private attributes
 	private bool m_RailCartActivated = false;
@@ -66,12 +67,12 @@ public class RailCart : MonoBehaviour
 	{
 		if(ChangeCameraTarget == true) 
 		{
-			if (Camera.main.orthographicSize < 25) 
+			if (Camera.main.orthographicSize < MaxCameraSize) 
 			{
 				Camera.main.orthographicSize += CameraSizeSpeed * Time.deltaTime;
-				if (Camera.main.orthographicSize >= 25.0f)
+				if (Camera.main.orthographicSize >= MaxCameraSize)
 				{
-					Camera.main.orthographicSize = 25.0f;
+					Camera.main.orthographicSize = MaxCameraSize;
 				}
 			}
 			cameraPoint.target = fixedCameraPoint.transform;
