@@ -67,6 +67,8 @@ public class PlayerController : MonoBehaviour {
 			DeathAnimation();
 			return;
 		}
+		else if(!bMovementAllowed)
+			return;
 		
 		groundCheck.transform.position = ( new Vector3(transform.position.x ,
         						 transform.position.y - circCollider.radius * transform.localScale.x - groundCheckOffset ,
@@ -187,6 +189,10 @@ public class PlayerController : MonoBehaviour {
 	{
 		bMovementAllowed = true;
 	}
+	void DisableControls()
+	{
+		bMovementAllowed = false;	
+	}
 	
 	void DeathAnimation()
 	{
@@ -206,11 +212,12 @@ public class PlayerController : MonoBehaviour {
 		{
 			circCollider.enabled = false;
 			
-			transform.position = (transform.position - new Vector3(0.0f, .4f * Time.deltaTime, 0));
+			transform.position = (transform.position - new Vector3(0.0f, .8f * Time.deltaTime, 0));
 		}
 		else if(deathTimer > deathMoveTimer + DeathColorChangeTime )
 		{
 			Spawn();
+			Application.LoadLevel(Application.loadedLevel);
 		}
 		deathTimer += Time.deltaTime;
 	}
@@ -242,7 +249,7 @@ public class PlayerController : MonoBehaviour {
 		//retCol.b = Mathf.Sin(freqG * increment + 2) * amplitude + center;
 		//retCol.g = Mathf.Sin(freqB * increment + 4) * amplitude + center;
 		//retCol.a = 255;
-		Debug.Log(retCol);
+		//Debug.Log(retCol);
 		return retCol;
 	}
 }
