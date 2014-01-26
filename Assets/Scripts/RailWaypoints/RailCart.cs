@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class RailCart : MonoBehaviour 
@@ -6,6 +6,10 @@ public class RailCart : MonoBehaviour
 
 	public StaticWaypoint StartingWaypoint;
 	public float MaxSpeed;
+	public SmoothCamera2D cameraPoint;
+	public GameObject fixedCameraPoint;
+	public float mainCameraOrth = Camera.main.orthographicSize;
+
 
 	// Private attributes
 	private bool m_RailCartActivated = false;
@@ -14,6 +18,7 @@ public class RailCart : MonoBehaviour
 	private float m_MaxVelocity;
 	private Vector2 m_Direction;
 	private float m_PlayerInterpolation;
+	private bool m_HasEndedRail = false;
 
 	// Private associations
 	private StaticWaypoint m_CurrentWaypoint;
@@ -45,8 +50,18 @@ public class RailCart : MonoBehaviour
 	// Update is called once per frame
 	void Update() 
 	{
+		if (m_HasEndedRail == true) {
+			if (Camera.main.orthographicSize > mainCameraOrth) {
+				Camera.main.orthographicSize -= 0.5f;
+			}
+		}
 		if (m_RailCartActivated == true && m_RailCartFinished == false) 
 		{
+			if ( Camera.main.orthographicSize < 25 ) {
+				Camera.main.orthographicSize += 0.5f;
+			}
+			cameraPoint.target = fixedCameraPoint.transform;
+			cameraPoint.smoothTime = 0.5f;
 			/*
 			// Keep the player attached to this object.
 			if(m_PlayerObject.transform.position != this.transform.position)
@@ -75,10 +90,13 @@ public class RailCart : MonoBehaviour
 				}
 				else if( m_CurrentWaypoint.IsFinalWaypoint == true )
 				{
-
 					m_RailCartFinished = true;
 					m_CurrentWaypoint = StartingWaypoint;
 					this.transform.position = StartingWaypoint.transform.position;
+					cameraPoint.target = m_PlayerObject.transform;
+					//cameraPoint.smoothTime = 0.5f;
+					//Camera.main.orthographicSize = mainCameraOrth;
+					m_HasEndedRail = true;
 				}
 			}
 		}
