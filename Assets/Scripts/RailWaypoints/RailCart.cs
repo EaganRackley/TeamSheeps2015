@@ -8,7 +8,7 @@ public class RailCart : MonoBehaviour
 	public float MaxSpeed;
 	public SmoothCamera2D cameraPoint;
 	public GameObject fixedCameraPoint;
-	public float mainCameraOrth = Camera.main.orthographicSize;
+	public float mainCameraOrth;
 
 
 	// Private attributes
