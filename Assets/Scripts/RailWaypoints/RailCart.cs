@@ -9,7 +9,8 @@ public class RailCart : MonoBehaviour
 	public SmoothCamera2D cameraPoint;
 	public GameObject fixedCameraPoint;
 	public float mainCameraOrth = Camera.main.orthographicSize;
-
+	public bool ChangeCameraTarget = false;
+	public float CameraSizeSpeed = 1.0f;
 
 	// Private attributes
 	private bool m_RailCartActivated = false;
@@ -48,30 +49,40 @@ public class RailCart : MonoBehaviour
 		}
 	}
 
-	// Update is called once per frame
-	void Update() 
+	void HandleReturningCameraSize ()
 	{
-		if (m_HasEndedRail == true) {
-			if (Camera.main.orthographicSize > mainCameraOrth) {
+		if ((ChangeCameraTarget == true) && (m_HasEndedRail == true))
+		{
+			if (Camera.main.orthographicSize > mainCameraOrth) 
+			{
 				Camera.main.orthographicSize -= 0.5f;
 			}
 		}
-		if (m_RailCartActivated == true && m_RailCartFinished == false) 
+	}
+
+	void HandleCameraAssignment ()
+	{
+		if(ChangeCameraTarget == true) 
 		{
-			if ( Camera.main.orthographicSize < 25 ) {
-				Camera.main.orthographicSize += 0.5f;
+			if (Camera.main.orthographicSize < 25) 
+			{
+				Camera.main.orthographicSize += CameraSizeSpeed * Time.deltaTime;
 			}
 			cameraPoint.target = fixedCameraPoint.transform;
 			cameraPoint.smoothTime = 0.5f;
-			/*
-			// Keep the player attached to this object.
-			if(m_PlayerObject.transform.position != this.transform.position)
-			{
-				Vector3 pos = m_PlayerObject.transform.position;
-				pos = Vector3.Lerp(m_PlayerObject.transform.position, this.transform.position, m_PlayerInterpolation+=1.0f);
-				m_PlayerObject.transform.position = pos;
-			}
-			*/
+		}
+	}
+
+	// Update is called once per frame
+	void Update() 
+	{
+
+		HandleReturningCameraSize ();
+		
+		if (m_RailCartActivated == true && m_RailCartFinished == false) 
+		{
+			HandleCameraAssignment ();
+
 			m_PlayerObject.transform.position = this.transform.position;
 
 			if (m_Velocity < m_MaxVelocity) 
@@ -95,8 +106,6 @@ public class RailCart : MonoBehaviour
 					m_CurrentWaypoint = StartingWaypoint;
 					this.transform.position = StartingWaypoint.transform.position;
 					cameraPoint.target = m_PlayerObject.transform;
-					//cameraPoint.smoothTime = 0.5f;
-					//Camera.main.orthographicSize = mainCameraOrth;
 					m_HasEndedRail = true;
 				}
 			}
