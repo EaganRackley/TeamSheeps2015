@@ -17,8 +17,6 @@ public class RailCart : MonoBehaviour
 	private bool m_RailCartFinished = false;
 	private float m_Velocity;
 	private float m_MaxVelocity;
-	private Vector2 m_Direction;
-	private float m_PlayerInterpolation;
 	private bool m_HasEndedRail = false;
 
 	// Private associations
@@ -31,8 +29,8 @@ public class RailCart : MonoBehaviour
 		m_CurrentWaypoint = StartingWaypoint;
 		m_RailCartActivated = false;
 		m_RailCartFinished = false;
+		m_HasEndedRail = false;
 		m_MaxVelocity = MaxSpeed;
-		m_PlayerInterpolation = 0;
 		mainCameraOrth = Camera.main.orthographicSize;
 	}
 
@@ -56,6 +54,10 @@ public class RailCart : MonoBehaviour
 			if (Camera.main.orthographicSize > mainCameraOrth) 
 			{
 				Camera.main.orthographicSize -= 0.5f;
+				if( Camera.main.orthographicSize == mainCameraOrth )
+				{
+					Start();
+				}
 			}
 		}
 	}
@@ -67,6 +69,10 @@ public class RailCart : MonoBehaviour
 			if (Camera.main.orthographicSize < 25) 
 			{
 				Camera.main.orthographicSize += CameraSizeSpeed * Time.deltaTime;
+				if (Camera.main.orthographicSize >= 25.0f)
+				{
+					Camera.main.orthographicSize = 25.0f;
+				}
 			}
 			cameraPoint.target = fixedCameraPoint.transform;
 			cameraPoint.smoothTime = 0.5f;
@@ -83,7 +89,7 @@ public class RailCart : MonoBehaviour
 		{
 			
 			m_PlayerObject.GetComponent<PlayerController>().DisableControls();
-			HandleCameraAssignment ();
+			HandleCameraAssignment();
 
 			m_PlayerObject.transform.position = this.transform.position;
 
