@@ -185,11 +185,11 @@ public class PlayerController : MonoBehaviour {
 		transform.localScale = theScale;
 	}
 
-	void EnableControls()
+	public void EnableControls()
 	{
 		bMovementAllowed = true;
 	}
-	void DisableControls()
+	public void DisableControls()
 	{
 		bMovementAllowed = false;	
 	}

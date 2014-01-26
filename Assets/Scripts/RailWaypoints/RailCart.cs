@@ -81,6 +81,8 @@ public class RailCart : MonoBehaviour
 		
 		if (m_RailCartActivated == true && m_RailCartFinished == false) 
 		{
+			
+			m_PlayerObject.GetComponent<PlayerController>().DisableControls();
 			HandleCameraAssignment ();
 
 			m_PlayerObject.transform.position = this.transform.position;
@@ -107,6 +109,8 @@ public class RailCart : MonoBehaviour
 					this.transform.position = StartingWaypoint.transform.position;
 					cameraPoint.target = m_PlayerObject.transform;
 					m_HasEndedRail = true;
+					m_PlayerObject.GetComponent<PlayerController>().EnableControls();
+					
 				}
 			}
 		}
