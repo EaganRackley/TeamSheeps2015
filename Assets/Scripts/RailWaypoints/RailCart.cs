@@ -32,6 +32,7 @@ public class RailCart : MonoBehaviour
 		m_RailCartFinished = false;
 		m_MaxVelocity = MaxSpeed;
 		m_PlayerInterpolation = 0;
+		mainCameraOrth = Camera.main.orthographicSize;
 	}
 
 	void OnTriggerEnter2D(Collider2D other)
