@@ -17,10 +17,10 @@ public class PlayerController : MonoBehaviour {
     public float minSize = 0.5f;
     public float maxSize = 1.4f;
     public float sizeChangeDelta = .1f;
-	
+
 	public float deathSize = 2.3f;
-	bool deathState = false;
-	float deathTimer = 0f;
+	public bool deathState = false;
+	public float deathTimer = 0f;
 	public Color deathColor;
 	public float DeathColorChangeTime = 3.0f;
 	public float deathMoveTimer = 3.0f;
@@ -194,7 +194,7 @@ public class PlayerController : MonoBehaviour {
 		bMovementAllowed = false;	
 	}
 	
-	void DeathAnimation()
+	public void DeathAnimation()
 	{
 		bMovementAllowed = false;
 		rigidbody2D.gravityScale = 0;

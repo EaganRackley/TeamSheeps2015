@@ -13,7 +13,12 @@ public class MusicZone : MonoBehaviour {
 	{
 		if (other.gameObject.tag == "Player" )
 		{
-			music.increaseVolume(1.0f);			
+			if (this.gameObject.name == "MusicalZone1") {
+				music.increaseVolume(0.8f);
+			}
+			else {
+				music.increaseVolume(1.0f);			
+			}
 		}
 	}
 	

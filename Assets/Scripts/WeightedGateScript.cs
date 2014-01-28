@@ -9,6 +9,7 @@ public class WeightedGateScript : MonoBehaviour
 	public CircleCollider2D ColliderD;
 	public PlayerController PlayerObject;
 	public bool playedWobbleSound = false;
+	public bool playedCollapseSound = false;
 
 	private bool m_Triggered = false;
 
@@ -54,8 +55,11 @@ public class WeightedGateScript : MonoBehaviour
 				ColliderA.isTrigger = true;
 				ColliderB.isTrigger = true;
 				ColliderC.isTrigger = true;
-				ColliderD.isTrigger = true;	
-				transform.GetComponentsInChildren<AudioSource>()[0].audio.Play();
+				ColliderD.isTrigger = true;
+				if (playedCollapseSound == false) {
+					transform.GetComponentsInChildren<AudioSource>()[0].audio.Play();
+					playedCollapseSound = true;
+				}
 			}
 			else if(PlayerObject.transform.localScale.x >= 0.2f)
 			{
