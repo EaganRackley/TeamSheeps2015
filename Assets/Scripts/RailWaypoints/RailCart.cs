@@ -8,7 +8,7 @@ public class RailCart : MonoBehaviour
 	public float MaxSpeed;
 	public SmoothCamera2D cameraPoint;
 	public GameObject fixedCameraPoint;
-	public float mainCameraOrth = Camera.main.orthographicSize;
+	public float mainCameraOrth;
 	public bool ChangeCameraTarget = false;
 	public float CameraSizeSpeed = 1.0f;
 	public float MaxCameraSize = 25.0f;
@@ -16,8 +16,8 @@ public class RailCart : MonoBehaviour
 	// Private attributes
 	private bool m_RailCartActivated = false;
 	private bool m_RailCartFinished = false;
-	private float m_Velocity;
-	private float m_MaxVelocity;
+	private float m_Velocity = 0.0f;
+	private float m_MaxVelocity = 0.0f;
 	private bool m_HasEndedRail = false;
 
 	// Private associations
@@ -25,7 +25,7 @@ public class RailCart : MonoBehaviour
 	private GameObject m_PlayerObject;
 
 	// Use this for initialization
-	void Start () {
+	void Awake () {
 		this.transform.position = StartingWaypoint.transform.position;
 		m_CurrentWaypoint = StartingWaypoint;
 		m_RailCartActivated = false;
@@ -57,7 +57,7 @@ public class RailCart : MonoBehaviour
 				Camera.main.orthographicSize -= 0.5f;
 				if( Camera.main.orthographicSize == mainCameraOrth )
 				{
-					Start();
+					Awake();
 				}
 			}
 		}
