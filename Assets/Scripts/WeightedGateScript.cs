@@ -44,7 +44,7 @@ public class WeightedGateScript : MonoBehaviour
 			{
 				animator.SetBool("Wobble", true);
 				if (playedWobbleSound == false) {
-					transform.GetComponentsInChildren<AudioSource>()[0].audio.Play();
+					//transform.GetComponentsInChildren<AudioSource>()[0].audio.Play();
 					playedWobbleSound = true;
 				}
 			}
