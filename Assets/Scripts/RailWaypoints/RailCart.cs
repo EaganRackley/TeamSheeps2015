@@ -24,6 +24,13 @@ public class RailCart : MonoBehaviour
 	private StaticWaypoint m_CurrentWaypoint;
 	private GameObject m_PlayerObject;
 
+	public void ResetRailcartSettings(float newMaxSpeed, float newMaxCameraSize, float newCameraSizeSpeed)
+	{
+		m_MaxVelocity = newMaxSpeed;
+		CameraSizeSpeed = newCameraSizeSpeed;
+		MaxCameraSize = newMaxCameraSize;
+	}
+
 	// Use this for initialization
 	void Awake () {
 		this.transform.position = StartingWaypoint.transform.position;
@@ -34,7 +41,7 @@ public class RailCart : MonoBehaviour
 		m_MaxVelocity = MaxSpeed;
 		mainCameraOrth = Camera.main.orthographicSize;
 	}
-
+	
 	void OnTriggerEnter2D(Collider2D other)
 	{
 		if (other.gameObject.tag == "Player" && m_RailCartActivated == false && m_RailCartFinished == false) 
@@ -97,6 +104,10 @@ public class RailCart : MonoBehaviour
 			if (m_Velocity < m_MaxVelocity) 
 			{
 				m_Velocity += 10.0f * Time.deltaTime;
+			}
+			else if (m_Velocity > m_MaxVelocity)
+			{
+				m_Velocity -= 10.0f * Time.deltaTime;
 			}
 
 			Vector3 position = this.transform.position;
