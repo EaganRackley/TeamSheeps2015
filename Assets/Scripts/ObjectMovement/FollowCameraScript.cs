@@ -28,11 +28,11 @@ public class FollowCameraScript : MonoBehaviour{
 			pos.z = this.transform.position.z;
 			this.transform.position = pos;	
 
-			if ( (ChangeSize) && (myCameraTransform.camera.orthographicSize + (m_BaseSize.x * 4.0f) != this.transform.localScale.x) )
+			if ( (ChangeSize) && (myCameraTransform.camera.orthographicSize + (m_BaseSize.x * 3.0f) != this.transform.localScale.x) )
 			{
 				Vector3 scale = this.transform.localScale;
-				scale.x = myCameraTransform.camera.orthographicSize + (m_BaseSize.x * 4.0f);
-				scale.y = myCameraTransform.camera.orthographicSize + (m_BaseSize.y * 4.0f);
+				scale.x = myCameraTransform.camera.orthographicSize + (m_BaseSize.x * 3.0f);
+				scale.y = myCameraTransform.camera.orthographicSize + (m_BaseSize.y * 3.0f);
 				this.transform.localScale = scale;
 			}
 		}
