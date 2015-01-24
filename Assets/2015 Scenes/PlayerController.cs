@@ -2,13 +2,21 @@ using UnityEngine;
 using System.Collections;
 
 public class PlayerController : MonoBehaviour {
-    public enum FacingDirection {N, S, E, W};
+    // Enum for directions the player is facing.
+    // 
+    //       N
+    //    NW | NE
+    //  W -- * -- E
+    //    SW | SE
+    //       S
+    // 
+    public enum FacingDirection {N, NE, E, SE, S, SW, W, NW};
 
     public float speed = 10f;
     // Default direction is North.
     public FacingDirection currentDirection = FacingDirection.N;
 
-    // Direction keys.
+    // Direction keycodes; to be set in the scene editor.
     public KeyCode upKey;
     public KeyCode downKey;
     public KeyCode leftKey;
@@ -23,27 +31,30 @@ public class PlayerController : MonoBehaviour {
 
     // Called once each frame.
     void Update(){
+        // If no buttons are pressed, velocity is 0.
+        float velocity_x = 0f;
+        float velocity_y = 0f;
 
-        // Check for movement buttons; if none, set velocity to 0.
-        // Moving in a direction sets your facing to that direction.
-        if (Input.GetButton("Up")) {
-            this.body.velocity = new Vector2(0, speed);
+        // Set x component of velocity.
+        if (Input.GetKey(upKey)) {
+            velocity_y += speed;
             this.currentDirection = FacingDirection.N;
         }
-        else if (Input.GetButton("Down")) {
-            this.body.velocity = new Vector2(0, -speed);
+        else if (Input.GetKey(downKey)) {
+            velocity_y -= speed;
             this.currentDirection = FacingDirection.S;
         }
-        else if (Input.GetButton("Left")) {
-            this.body.velocity = new Vector2(-speed, 0);
+
+        // Set x component of velocity.
+        if (Input.GetKey(leftKey)) {
+            velocity_x -= speed;
             this.currentDirection = FacingDirection.W;
         }
-        else if (Input.GetButton("Right")) {
-            this.body.velocity = new Vector2(speed, 0);
+        else if (Input.GetKey(rightKey)) {
+            velocity_x += speed;
             this.currentDirection = FacingDirection.E;
         }
-        else {
-            this.body.velocity = Vector2.zero;
-        }
+
+        body.velocity = new Vector2D(velocity_x, velocity_y);
     }
 }
