@@ -10,7 +10,7 @@ public class PlayerController : MonoBehaviour {
     //    SW | SE
     //       S
     // 
-    public enum FacingDirection {N, NE, E, SE, S, SW, W, NW};
+    public enum FacingDirection {N, E, S, W};
 
     // Movement amount (for all movement directions).
     public float speed = 10f;
