@@ -17,7 +17,9 @@ public class PlayerController : MonoBehaviour {
     // Default direction is North.
     public FacingDirection currentDirection = FacingDirection.N;
     
-    public const float speedDecreaseDelta = 0.01f;
+    public const SPEED_DECREASE_DELTA = 0.01f;
+    public const DECREASE_SPEED_EVERY = 0.5f; //in seconds
+    private float speedDecreaseTimer = DECREASE_SPEED_EVERY;
     public bool isSick;
 
     // Direction keycodes; to be set in the scene editor.
@@ -42,6 +44,17 @@ public class PlayerController : MonoBehaviour {
 
     // Called once each frame.
     void Update(){
+        if (isSick){
+            if (speedDecreaseTimer > 0) {
+                // Time.deltaTime returns time elapsed since last frame drawn.
+                this.speedDecreaseTimer -= Time.deltaTime;
+            }
+            else if (speedDecreaseTimer <= 0) {
+                // Timer's run out, so decrease speed and reset timer.
+                this.speedDecreaseTimer = DECREASE_SPEED_EVERY;
+                this.speed -= SPEED_DECREASE_DELTA;
+            }
+        }
 
         // If no buttons are pressed, velocity is 0.
         float velocity_x = 0f;
@@ -67,43 +80,8 @@ public class PlayerController : MonoBehaviour {
             this.currentDirection = FacingDirection.E;
         }
 
-        // Set the FacingDirection according to buttons pressed.
-        if (velocity_x < 0f) {
-            if (velocity_y > 0f) {
-                this.currentDirection = FacingDirection.NW;
-            }
-            else if (velocity_y == 0f) {
-                this.currentDirection = FacingDirection.W;
-            }
-            else if (velocity_y < 0f) {
-                this.currentDirection = FacingDirection.SW;
-            }
-        }
-        else if (velocity_x == 0f) {
-            if (velocity_y > 0f) {
-                this.currentDirection = FacingDirection.N;
-            }
-            else if (velocity_y == 0f) {
-                // Do nothing. No buttons pressed.
-            }
-            else if (velocity_y < 0f) {
-                this.currentDirection = FacingDirection.S;
-            }
-        }
-        else if (velocity_x > 0f) {
-            if (velocity_y > 0f) {
-                this.currentDirection = FacingDirection.NE;
-            }
-            else if (velocity_y == 0f) {
-                this.currentDirection = FacingDirection.E;
-            }
-            else if (velocity_y < 0f) {
-                this.currentDirection = FacingDirection.SE;
-            }
-        }
-
         // Set the new velocity.
-        body.velocity = new Vector3(velocity_x, velocity_y, 0f);
+        this.body.velocity = new Vector3(velocity_x, velocity_y, 0f);
     }
 
     public void GetPowerup(PlayerPowerup powerupFunction)
