@@ -41,7 +41,6 @@ public class FallingBlockScript : MonoBehaviour {
 
         if (m_LifeSpent > Lifetime - ShakeTime)
         {
-            this.particleEmitter.Emit();
             Shake();
         }
 
