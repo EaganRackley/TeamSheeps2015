@@ -4,9 +4,11 @@ using System.Collections;
 public class FallingBlockScript : MonoBehaviour {
 
     public float Lifetime = 300.0f;
+    public float DestroyAfter = 310.0f;
     public float ShakeTime = 2.0f;
     public float MinShakeMagnitude = 0.01f;
     public float MaxShakeMagnitude = 0.1f;
+    public float MaxFallOffset = 5.0f;
 
     private float m_LifeSpent = 0.0f;
     private float m_CurrentShakeMag = 0.0f;
@@ -14,8 +16,10 @@ public class FallingBlockScript : MonoBehaviour {
 
     void Start()
     {
+        float rangeAdjustment = Random.Range(0.01f, MaxFallOffset) - MaxFallOffset/2.0f;
         m_CurrentShakeMag = MinShakeMagnitude;
-        Lifetime += Random.Range(0.1f, 5.0f) - 2.5f;
+        Lifetime += rangeAdjustment;
+        DestroyAfter += rangeAdjustment;
         m_StartPosition = this.transform.position;
     }
 
@@ -48,6 +52,10 @@ public class FallingBlockScript : MonoBehaviour {
         {
             this.rigidbody.isKinematic = false;
             this.rigidbody.WakeUp();
+        }
+        if (m_LifeSpent > DestroyAfter)
+        {
+            Destroy(this.gameObject);
         }
 	}
 }
