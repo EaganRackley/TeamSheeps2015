@@ -55,6 +55,41 @@ public class PlayerController : MonoBehaviour {
             this.currentDirection = FacingDirection.E;
         }
 
+        // Set the FacingDirection according to buttons pressed.
+        if (velocity_x < 0f) {
+            if (velocity_y > 0f) {
+                this.currentDirection = FacingDirection.NW;
+            }
+            else if (velocity_y == 0f) {
+                this.currentDirection = FacingDirection.W;
+            }
+            else if (velocity_y < 0f) {
+                this.currentDirection = FacingDirection.SW;
+            }
+        }
+        else if (velocity_x == 0f) {
+            if (velocity_y > 0f) {
+                this.currentDirection = FacingDirection.W;
+            }
+            else if (velocity_y == 0f) {
+                this.currentDirection = 0f;
+            }
+            else if (velocity_y < 0f) {
+                this.currentDirection = FacingDirection.S;
+            }
+        }
+        else if (velocity_x > 0f) {
+            if (velocity_y > 0f) {
+                this.currentDirection = FacingDirection.NE;
+            }
+            else if (velocity_y == 0f) {
+                this.currentDirection = FacingDirection.E;
+            }
+            else if (velocity_y < 0f) {
+                this.currentDirection = FacingDirection.SE;
+            }
+        }
+
         body.velocity = new Vector2(velocity_x, velocity_y);
     }
 }
