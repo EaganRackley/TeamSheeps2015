@@ -12,9 +12,14 @@ public class PlayerController : MonoBehaviour {
     // 
     public enum FacingDirection {N, NE, E, SE, S, SW, W, NW};
 
+    // Movement amount (for all movement directions).
     public float speed = 10f;
     // Default direction is North.
     public FacingDirection currentDirection = FacingDirection.N;
+    
+    public const speedDecreaseDelta = 0.01f;
+    public bool isSick;
+    public 
 
     // Direction keycodes; to be set in the scene editor.
     public KeyCode upKey;
@@ -22,15 +27,22 @@ public class PlayerController : MonoBehaviour {
     public KeyCode leftKey;
     public KeyCode rightKey;
 
-    private Rigidbody2D body;
+    private Rigidbody3D body;
 
     // Called on load.
     void Awake() {
         this.body = GetComponent<Rigidbody2D>();
     }
 
+    // Called once per timestep.
+    void FixedUpdate() {
+
+    }
+
     // Called once each frame.
     void Update(){
+        Time.deltaTime
+
         // If no buttons are pressed, velocity is 0.
         float velocity_x = 0f;
         float velocity_y = 0f;
@@ -72,7 +84,7 @@ public class PlayerController : MonoBehaviour {
                 this.currentDirection = FacingDirection.N;
             }
             else if (velocity_y == 0f) {
-                // Do nothing. Current direction doesn't change.
+                // Do nothing. No buttons pressed.
             }
             else if (velocity_y < 0f) {
                 this.currentDirection = FacingDirection.S;
@@ -90,6 +102,7 @@ public class PlayerController : MonoBehaviour {
             }
         }
 
-        body.velocity = new Vector2(velocity_x, velocity_y);
+        // Set the new velocity.
+        body.velocity = new Vector3(velocity_x, velocity_y, 0f);
     }
 }
