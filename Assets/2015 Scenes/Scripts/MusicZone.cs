@@ -11,15 +11,7 @@ public class MusicZone : MonoBehaviour {
 	
 	void OnTriggerEnter2D(Collider2D other)
 	{
-		if (other.gameObject.tag == "Player" )
-		{
-			if (this.gameObject.name == "MusicalZone1") {
-				music.increaseVolume(0.8f);
-			}
-			else {
-				music.increaseVolume(1.0f);			
-			}
-		}
+		//todo Add Trigger for each zone respectfully
 	}
 	
 	// Update is called once per frame
