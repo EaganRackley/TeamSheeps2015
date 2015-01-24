@@ -55,6 +55,6 @@ public class PlayerController : MonoBehaviour {
             this.currentDirection = FacingDirection.E;
         }
 
-        body.velocity = new Vector2D(velocity_x, velocity_y);
+        body.velocity = new Vector2(velocity_x, velocity_y);
     }
 }
