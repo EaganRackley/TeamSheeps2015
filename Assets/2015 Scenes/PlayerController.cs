@@ -17,8 +17,8 @@ public class PlayerController : MonoBehaviour {
     // Default direction is North.
     public FacingDirection currentDirection = FacingDirection.N;
     
-    public const SPEED_DECREASE_DELTA = 0.01f;
-    public const DECREASE_SPEED_EVERY = 0.5f; //in seconds
+    public const float SPEED_DECREASE_DELTA = 0.01f;
+    public const float DECREASE_SPEED_EVERY = 0.5f; //in seconds
     private float speedDecreaseTimer = DECREASE_SPEED_EVERY;
     public bool isSick;
 
