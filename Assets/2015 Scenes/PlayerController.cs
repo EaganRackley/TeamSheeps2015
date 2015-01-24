@@ -72,7 +72,7 @@ public class PlayerController : MonoBehaviour {
                 this.currentDirection = FacingDirection.W;
             }
             else if (velocity_y == 0f) {
-                this.currentDirection = 0f;
+                // Do nothing. Current direction doesn't change.
             }
             else if (velocity_y < 0f) {
                 this.currentDirection = FacingDirection.S;
