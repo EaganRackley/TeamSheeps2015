@@ -67,41 +67,6 @@ public class PlayerController : MonoBehaviour {
             this.currentDirection = FacingDirection.E;
         }
 
-        // Set the FacingDirection according to buttons pressed.
-        if (velocity_x < 0f) {
-            if (velocity_y > 0f) {
-                this.currentDirection = FacingDirection.NW;
-            }
-            else if (velocity_y == 0f) {
-                this.currentDirection = FacingDirection.W;
-            }
-            else if (velocity_y < 0f) {
-                this.currentDirection = FacingDirection.SW;
-            }
-        }
-        else if (velocity_x == 0f) {
-            if (velocity_y > 0f) {
-                this.currentDirection = FacingDirection.N;
-            }
-            else if (velocity_y == 0f) {
-                // Do nothing. No buttons pressed.
-            }
-            else if (velocity_y < 0f) {
-                this.currentDirection = FacingDirection.S;
-            }
-        }
-        else if (velocity_x > 0f) {
-            if (velocity_y > 0f) {
-                this.currentDirection = FacingDirection.NE;
-            }
-            else if (velocity_y == 0f) {
-                this.currentDirection = FacingDirection.E;
-            }
-            else if (velocity_y < 0f) {
-                this.currentDirection = FacingDirection.SE;
-            }
-        }
-
         // Set the new velocity.
         body.velocity = new Vector3(velocity_x, velocity_y, 0f);
     }
