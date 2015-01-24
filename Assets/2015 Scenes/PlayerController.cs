@@ -11,15 +11,14 @@ public class PlayerController : MonoBehaviour {
     //       S
     // 
     public enum FacingDirection {N, NE, E, SE, S, SW, W, NW};
-
+    public delegate IEnumerator PlayerPowerup(PlayerController player);
     // Movement amount (for all movement directions).
-    public float speed = 10f;
+    public float speed;
     // Default direction is North.
     public FacingDirection currentDirection = FacingDirection.N;
     
-    public const speedDecreaseDelta = 0.01f;
+    public const float speedDecreaseDelta = 0.01f;
     public bool isSick;
-    public 
 
     // Direction keycodes; to be set in the scene editor.
     public KeyCode upKey;
@@ -27,11 +26,13 @@ public class PlayerController : MonoBehaviour {
     public KeyCode leftKey;
     public KeyCode rightKey;
 
-    private Rigidbody3D body;
+    private Rigidbody body;
+    public Light playerLight;
 
     // Called on load.
     void Awake() {
-        this.body = GetComponent<Rigidbody2D>();
+        this.body = GetComponent<Rigidbody>();
+        this.playerLight = transform.GetComponentInChildren<Light>();
     }
 
     // Called once per timestep.
@@ -41,7 +42,6 @@ public class PlayerController : MonoBehaviour {
 
     // Called once each frame.
     void Update(){
-        Time.deltaTime
 
         // If no buttons are pressed, velocity is 0.
         float velocity_x = 0f;
@@ -104,5 +104,10 @@ public class PlayerController : MonoBehaviour {
 
         // Set the new velocity.
         body.velocity = new Vector3(velocity_x, velocity_y, 0f);
+    }
+
+    public void GetPowerup(PlayerPowerup powerupFunction)
+    {
+        StartCoroutine(powerupFunction(this));
     }
 }
