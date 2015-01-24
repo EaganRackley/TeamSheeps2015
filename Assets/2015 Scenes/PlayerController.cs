@@ -27,6 +27,17 @@ public class PlayerController : MonoBehaviour {
     private Rigidbody body;
     [HideInInspector]
     public Light playerLight;
+    protected Animator m_Animator;
+
+    private Vector3 ROTATION_NORTH = new Vector3(0.0f, 0.0f, 180.0f);
+    private Vector3 ROTATION_EAST = new Vector3(0.0f, 0.0f, 90.0f);
+    private Vector3 ROTATION_SOUTH = new Vector3(0.0f, 0.0f, 0.0f);
+    private Vector3 ROTATION_WEST = new Vector3(0.0f, 0.0f, 270.0f);
+    
+    void Start()
+    {
+        m_Animator = GetComponent<Animator>();
+    }
 
     // Called on load.
     void Awake() {
@@ -37,6 +48,27 @@ public class PlayerController : MonoBehaviour {
     // Called once per timestep.
     void FixedUpdate() {
 
+    }
+
+    // Examines the current facing direction and sets rotation accordingly.
+    public void HandlePlayerRotation()
+    {
+        if (this.currentDirection == FacingDirection.N)
+        {
+            this.transform.eulerAngles = (ROTATION_NORTH);
+        }
+        else if (this.currentDirection == FacingDirection.E)
+        {
+            this.transform.eulerAngles = (ROTATION_EAST);
+        }
+        else if (this.currentDirection == FacingDirection.S)
+        {
+            this.transform.eulerAngles = (ROTATION_SOUTH);
+        }
+        else if (this.currentDirection == FacingDirection.W)
+        {
+            this.transform.eulerAngles = (ROTATION_WEST);
+        }
     }
 
     // Called once each frame.
@@ -69,6 +101,20 @@ public class PlayerController : MonoBehaviour {
 
         // Set the new velocity.
         this.body.velocity = new Vector3(velocity_x, velocity_y, 0f);
+        
+        // Apply the new velocity to our animations
+        if (this.body.velocity.x != 0 || this.body.velocity.y != 0)
+        {
+            m_Animator.SetBool("IsMoving", true);
+        }
+        else
+        {
+            m_Animator.SetBool("IsMoving", false);
+        }
+        
+
+        // Apply our current direction to the player rotation
+        HandlePlayerRotation();
     }
 
     public void GetPowerup(PlayerPowerup powerupFunction)
