@@ -17,9 +17,10 @@ public class PlayerController : MonoBehaviour {
     // Default direction is North.
     public FacingDirection currentDirection = FacingDirection.N;
     
-    public const speedDecreaseDelta = 0.01f;
+    public const SPEED_DECREASE_DELTA = 0.01f;
+    public const DECREASE_SPEED_EVERY = 0.5f; //in seconds
+    private float speedDecreaseTimer = DECREASE_SPEED_EVERY;
     public bool isSick;
-    public 
 
     // Direction keycodes; to be set in the scene editor.
     public KeyCode upKey;
@@ -31,7 +32,7 @@ public class PlayerController : MonoBehaviour {
 
     // Called on load.
     void Awake() {
-        this.body = GetComponent<Rigidbody2D>();
+        this.body = GetComponent<Rigidbody3D>();
     }
 
     // Called once per timestep.
@@ -41,7 +42,17 @@ public class PlayerController : MonoBehaviour {
 
     // Called once each frame.
     void Update(){
-        Time.deltaTime
+        if (isSick){
+            if (speedDecreaseTimer > 0) {
+                // Time.deltaTime returns time elapsed since last frame drawn.
+                this.speedDecreaseTimer -= Time.deltaTime;
+            }
+            else if (speedDecreaseTimer <= 0) {
+                // Timer's run out, so decrease speed and reset timer.
+                this.speedDecreaseTimer = DECREASE_SPEED_EVERY;
+                this.speed -= SPEED_DECREASE_DELTA;
+            }
+        }
 
         // If no buttons are pressed, velocity is 0.
         float velocity_x = 0f;
@@ -68,6 +79,6 @@ public class PlayerController : MonoBehaviour {
         }
 
         // Set the new velocity.
-        body.velocity = new Vector3(velocity_x, velocity_y, 0f);
+        this.body.velocity = new Vector3(velocity_x, velocity_y, 0f);
     }
 }
