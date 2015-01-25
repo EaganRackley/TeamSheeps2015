@@ -15,7 +15,6 @@ public class sound : MonoBehaviour {
 	}
 
 	public void RemoveMusic() {
-		m_AudioSrc.volume = 0.0f;
 		m_hearingSound = false;
 	}
 
@@ -50,6 +49,11 @@ public class sound : MonoBehaviour {
 		if ( m_hearingSound == true ) {
 			if (m_AudioSrc.volume < 1.0f) {
 				m_AudioSrc.volume += .01f;
+			}
+		}
+		else if (m_hearingSound == false) {
+			if (m_AudioSrc.volume > 0.0f) {
+				m_AudioSrc.volume -= .01f;
 			}
 		}
 	}

@@ -12,6 +12,8 @@ public class PlayerController : MonoBehaviour
     //       S
     // 
     public enum FacingDirection { N, NE, E, SE, S, SW, W, NW };
+    public enum Gender { M, F };
+    public Gender gender;
     public delegate IEnumerator PlayerPowerup(PlayerController player);
     // Movement amount (for all movement directions).
     public float speed;
