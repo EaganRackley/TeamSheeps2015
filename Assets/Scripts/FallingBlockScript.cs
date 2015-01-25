@@ -16,11 +16,31 @@ public class FallingBlockScript : MonoBehaviour {
 
     void Start()
     {
+		m_LifeSpent = 0.0f;
+        float rightSideSecondOffset = 62;
+        // Set Lifetime and Destroy After based on X position
+        Vector3 worldPosition = this.transform.position;
+        if (worldPosition.x <= 24)
+        {
+            worldPosition.x += 36;
+            Lifetime = 60 + (worldPosition.x * 1.9f);
+            DestroyAfter = Lifetime + 10;
+        }
+        else if (worldPosition.x > 24 )
+        {
+            worldPosition.x -= 23;
+            Lifetime = 60f + ((rightSideSecondOffset - worldPosition.x) * 1.9f);
+            DestroyAfter = Lifetime + 10;
+        }
+
+		MaxFallOffset = 0.5f;
         float rangeAdjustment = Random.Range(0.01f, MaxFallOffset) - MaxFallOffset/2.0f;
         m_CurrentShakeMag = MinShakeMagnitude;
         Lifetime += rangeAdjustment;
         DestroyAfter += rangeAdjustment;
         m_StartPosition = this.transform.position;
+
+
     }
 
     // Creates a rumbling/shaking effect
