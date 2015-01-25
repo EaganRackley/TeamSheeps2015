@@ -14,8 +14,9 @@ public class sound : MonoBehaviour {
 		m_AudioSrc = GetComponent<AudioSource>();
 	}
 
-	public void RemoveAllMusic() {
-		//todo: remove all music prior to changing audio tracks This shouldn't remove the main theme playing however.
+	public void RemoveMusic() {
+		m_AudioSrc.volume = 0.0f;
+		m_hearingSound = false;
 	}
 
 	public void PlayDeathMusic() {
@@ -38,6 +39,7 @@ public class sound : MonoBehaviour {
 		m_maxSoundVolume = maxSoundVolume;
 		m_hearingSound = true;
 	}
+
 	
 	// Update is called once per frame
 	void Update() {
