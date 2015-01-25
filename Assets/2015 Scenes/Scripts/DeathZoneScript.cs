@@ -10,7 +10,6 @@ public class DeathZoneScript : MonoBehaviour {
 	public sound MainTheme;
 	public sound TogetherTheme;
 	public sound DeathThemeTogether;
-	public sound DeathThemeBoyAlone;
 
 	bool m_EndingTriggered = false;
 	
@@ -39,7 +38,6 @@ public class DeathZoneScript : MonoBehaviour {
 		}	
 		MainTheme.audio.Stop ();
 		TogetherTheme.audio.Stop ();
-		//DeathThemeTogether.audio.Play
 		return true;
 	}
 
@@ -59,6 +57,9 @@ public class DeathZoneScript : MonoBehaviour {
 
 	bool HandledTextFadeIn()
 	{
+		if (DeathThemeTogether.audio.isPlaying == false)
+						DeathThemeTogether.audio.Play ();
+
 		if(WhatDoWeDoNow.renderer.material.color.a < 1f)
 		{
 			// Set both materials to transparent so we can play the game.
