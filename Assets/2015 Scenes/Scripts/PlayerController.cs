@@ -108,7 +108,7 @@ public class PlayerController : MonoBehaviour
         }
 
         // Set the new velocity.
-        this.body.velocity = new Vector3(velocity_x, velocity_y, 0f);
+        this.body.velocity = new Vector3(velocity_x, velocity_y, this.body.velocity.z);
 
         // Apply the new velocity to our animations
         if (this.body.velocity.x != 0 || this.body.velocity.y != 0)

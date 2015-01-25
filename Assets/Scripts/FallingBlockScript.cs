@@ -14,6 +14,9 @@ public class FallingBlockScript : MonoBehaviour {
     private float m_CurrentShakeMag = 0.0f;
     private Vector3 m_StartPosition;
 
+	private const float FALL_TIME_MULTIPLIER = 1f;//1.9f;
+	private const float FALL_TIME_START = 1f;//60.0f;
+
     void Start()
     {
 		m_LifeSpent = 0.0f;
@@ -23,13 +26,13 @@ public class FallingBlockScript : MonoBehaviour {
         if (worldPosition.x <= 24)
         {
             worldPosition.x += 36;
-            Lifetime = 60 + (worldPosition.x * 1.9f);
+			Lifetime = FALL_TIME_START + (worldPosition.x * FALL_TIME_MULTIPLIER);
             DestroyAfter = Lifetime + 10;
         }
         else if (worldPosition.x > 24 )
         {
             worldPosition.x -= 23;
-            Lifetime = 60f + ((rightSideSecondOffset - worldPosition.x) * 1.9f);
+			Lifetime = FALL_TIME_START + ((rightSideSecondOffset - worldPosition.x) * FALL_TIME_MULTIPLIER);
             DestroyAfter = Lifetime + 10;
         }
 
