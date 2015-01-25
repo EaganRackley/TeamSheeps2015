@@ -7,6 +7,10 @@ public class DeathZoneScript : MonoBehaviour {
 	public MonoBehaviour Player2;
 	public MeshRenderer WhiteQuad;
 	public MeshRenderer WhatDoWeDoNow;
+	public sound MainTheme;
+	public sound TogetherTheme;
+	public sound DeathThemeTogether;
+	public sound DeathThemeBoyAlone;
 
 	bool m_EndingTriggered = false;
 	
@@ -24,6 +28,18 @@ public class DeathZoneScript : MonoBehaviour {
 		WhatDoWeDoNow.renderer.material.color = newColor;
 	}
 
+	// Fades out the main theme
+	bool HandleMusicFade()
+	{
+		/*if (MainTheme.audio.volume > 0f)
+		{
+			MainTheme.increaseVolume(0.5f * Time.deltaTime);
+
+		}	
+		*/
+		return true;
+	}
+
 	// Handles fading in the white quad
 	bool HandledWhiteFadeIn()
 	{
@@ -31,8 +47,22 @@ public class DeathZoneScript : MonoBehaviour {
 		{
 			// Set both materials to transparent so we can play the game.
 			Color newColor = WhiteQuad.renderer.material.color;
-			newColor.a += 0.1f * Time.deltaTime;
+			newColor.a += 0.25f * Time.deltaTime;
 			WhiteQuad.renderer.material.color = newColor;
+			return false;
+		}
+		return true;
+	}
+
+	bool HandledTextFadeIn()
+	{
+		if(WhatDoWeDoNow.renderer.material.color.a < 1f)
+		{
+			// Set both materials to transparent so we can play the game.
+			Color newColor = WhatDoWeDoNow.renderer.material.color;
+			newColor.a += 0.25f * Time.deltaTime;
+			WhatDoWeDoNow
+				.renderer.material.color = newColor;
 			return false;
 		}
 		return true;
@@ -42,14 +72,8 @@ public class DeathZoneScript : MonoBehaviour {
 	{
 		if (other.tag == "Player") 
 		{
-			if(Player2 == null)
-			{
-				m_EndingTriggered = true;
-			}
-			else
-			{
-				// Play guy and girl song
-			}
+			m_EndingTriggered = true;
+			
 		} 
 		else if (other.tag == "Player2") 
 		{
@@ -63,10 +87,12 @@ public class DeathZoneScript : MonoBehaviour {
 		{	
 			// Fade out primary music
 			// Fade in blank display
-			// Player Just guy song or both
 			if( HandledWhiteFadeIn() )
 			{
-
+				// Fase in text
+				if( HandledTextFadeIn() )
+				{
+				}
 			}
 		}
 	}
