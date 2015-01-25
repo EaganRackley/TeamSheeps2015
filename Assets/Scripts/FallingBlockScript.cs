@@ -14,8 +14,8 @@ public class FallingBlockScript : MonoBehaviour {
     private float m_CurrentShakeMag = 0.0f;
     private Vector3 m_StartPosition;
 
-	private const float FALL_TIME_MULTIPLIER = 1f;//1.9f;
-	private const float FALL_TIME_START = 300f;//60.0f;
+	private const float FALL_TIME_MULTIPLIER = 1.9f;
+	private const float FALL_TIME_START = 60.0f;
 
     void Start()
     {

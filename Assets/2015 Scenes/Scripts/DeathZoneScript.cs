@@ -90,7 +90,7 @@ public class DeathZoneScript : MonoBehaviour {
 		if (m_EndingTriggered == true) 
 		{	
 			// Fade out primary music
-			HandleMusicFade();
+			//HandleMusicFade();
 			// Fade in blank display
 			if( HandledWhiteFadeIn() )
 			{
