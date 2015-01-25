@@ -18,6 +18,7 @@ public class EventManager : MonoBehaviour
     }
 
     public GameObject fireflyPrefab;
+	public GameObject butterflyPrefab;
 
     public delegate void EventFunction();
     public bool DEBUG = false;
@@ -37,6 +38,7 @@ public class EventManager : MonoBehaviour
         this.bottomRight = GameObject.FindGameObjectWithTag("BottomRight").transform;
 
         //Add your own game events here!
+		AddEvent(SpawnTwentyButterflies, 20);
         AddEvent(SpawnTwentyFireflies, 60);
         AddEvent(SpawnFiftyFireflies, 115);
 
@@ -59,29 +61,34 @@ public class EventManager : MonoBehaviour
 
     void SpawnTwentyFireflies()
     {
-        _SpawnFireFlies(20);
+		_SpawnPrefab(this.fireflyPrefab, 20);
     }
 
     void SpawnFiftyFireflies()
     {
-        _SpawnFireFlies(50);
+        _SpawnPrefab(this.fireflyPrefab, 50);
     }
 
-    void _SpawnFireFlies(int numberOfFireFlies)
-    {
-            for (int i  = 0; i < numberOfFireFlies; i++)
-            {
-            Vector3 spawnPosition = new Vector3(Random.Range(topLeft.transform.position.x, bottomRight.transform.position.x),
-                                                Random.Range(bottomRight.transform.position.y, topLeft.transform.position.y),
-                                                -1f);
-            // Don't spawn if the firefly would spawn in view of the camera
-            Plane[] frustum = GeometryUtility.CalculateFrustumPlanes(Camera.main);
-            if(!GeometryUtility.TestPlanesAABB(frustum, new Bounds(spawnPosition, Vector3.one)))
-            {
-                Instantiate(fireflyPrefab, spawnPosition, Quaternion.identity);
-            }
-        }
-    }
+	void SpawnTwentyButterflies()
+	{
+		_SpawnPrefab(this.butterflyPrefab, 20);
+	}
+
+	void _SpawnPrefab(GameObject prefab, int number)
+	{
+		for (int i  = 0; i < number; i++)
+		{
+			Vector3 spawnPosition = new Vector3(Random.Range(topLeft.transform.position.x, bottomRight.transform.position.x),
+			                                    Random.Range(bottomRight.transform.position.y, topLeft.transform.position.y),
+			                                    -1f);
+			// Don't spawn if the prefab would spawn in view of the camera
+			Plane[] frustum = GeometryUtility.CalculateFrustumPlanes(Camera.main);
+			if(!GeometryUtility.TestPlanesAABB(frustum, new Bounds(spawnPosition, Vector3.one)))
+			{
+				Instantiate(prefab, spawnPosition, Quaternion.identity);
+			}
+		}
+	}
 
     void Update()
     {
