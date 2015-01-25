@@ -12,10 +12,8 @@ public class MusicTogether : MonoBehaviour {
 
 	void OnTriggerEnter(Collider other)
 	{
-		if (other.gameObject.tag == "Player2" )
+		if (other.gameObject.tag == "Player" )
 		{
-			Debug.Log ("I entered shit here!!!");
-			//music.RemoveMusic();
 			music.increaseVolume(1.0f);
 			isActive = true;
 		}
