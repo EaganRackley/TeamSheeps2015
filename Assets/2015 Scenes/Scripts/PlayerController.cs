@@ -1,8 +1,6 @@
 using UnityEngine;
 using System.Collections;
 
-namespace PartyTime
-{
 
     public class PlayerController : MonoBehaviour {
         // Enum for directions the player is facing.
@@ -140,5 +138,3 @@ namespace PartyTime
             StartCoroutine(powerupFunction(this));
         }
     }
-
-}
