@@ -16,12 +16,7 @@ public class PlayerController : MonoBehaviour {
     public float speed;
     // Default direction is North.
     public FacingDirection currentDirection = FacingDirection.N;
-
-	// Parammeters for sickness.
-	public const float SPEED_DECREASE_DELTA = 0.01f;
-	public const float DECREASE_SPEED_EVERY = 0.5f; //in seconds
-	private float speedDecreaseTimer = DECREASE_SPEED_EVERY;
-	public bool isSick;
+    
 
     // Direction keycodes; to be set in the scene editor.
     public KeyCode upKey;
@@ -78,17 +73,7 @@ public class PlayerController : MonoBehaviour {
 
     // Called once each frame.
     void Update(){
-		if (isSick){
-			if (speedDecreaseTimer > 0) {
-				// Time.deltaTime returns time elapsed since last frame drawn.
-				this.speedDecreaseTimer -= Time.deltaTime;
-			}
-			else if (speedDecreaseTimer <= 0) {
-				// Timer's run out, so decrease speed and reset timer.
-				this.speedDecreaseTimer = DECREASE_SPEED_EVERY;
-				this.speed -= SPEED_DECREASE_DELTA;
-			}
-		}
+       
 
         // If no buttons are pressed, velocity is 0.
         float velocity_x = 0f;
