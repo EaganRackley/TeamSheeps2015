@@ -15,11 +15,6 @@ public class MusicApart : MonoBehaviour {
 		if (m_MusicTogether.isActive == false)
 		{
 			music.increaseVolume(1.0f);
-		}
-		else
-		{
-			music.RemoveMusic();
-		}
-	
+		}	
 	}
 }
