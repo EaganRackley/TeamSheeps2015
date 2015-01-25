@@ -31,12 +31,15 @@ public class DeathZoneScript : MonoBehaviour {
 	// Fades out the main theme
 	bool HandleMusicFade()
 	{
-		/*if (MainTheme.audio.volume > 0f)
+		if (MainTheme.audio.volume > 0.1f)
 		{
-			MainTheme.increaseVolume(0.5f * Time.deltaTime);
-
+			MainTheme.audio.volume -= (1f);
+			TogetherTheme.audio.volume -= (1f);
+			return false;
 		}	
-		*/
+		MainTheme.audio.Stop ();
+		TogetherTheme.audio.Stop ();
+		//DeathThemeTogether.audio.Play
 		return true;
 	}
 
@@ -86,6 +89,7 @@ public class DeathZoneScript : MonoBehaviour {
 		if (m_EndingTriggered == true) 
 		{	
 			// Fade out primary music
+			HandleMusicFade();
 			// Fade in blank display
 			if( HandledWhiteFadeIn() )
 			{
