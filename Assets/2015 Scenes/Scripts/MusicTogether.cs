@@ -21,8 +21,11 @@ public class MusicTogether : MonoBehaviour {
 
 	void OnTriggerExit(Collider other)
 	{
-		music.RemoveMusic();
-		isActive = false;
+		if (other.gameObject.tag == "Player") 
+		{
+						music.RemoveMusic ();
+						isActive = false;
+		}
 	}
 
 	// Update is called once per frame

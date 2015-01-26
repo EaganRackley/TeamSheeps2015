@@ -7,9 +7,9 @@ public class DeathZoneScript : MonoBehaviour {
 	public MonoBehaviour Player2;
 	public MeshRenderer WhiteQuad;
 	public MeshRenderer WhatDoWeDoNow;
-	public sound MainTheme;
-	public sound TogetherTheme;
-	public sound DeathThemeTogether;
+	public AudioSource MainTheme;
+	public AudioSource TogetherTheme;
+	public AudioSource DeathThemeTogether;
 
 	bool m_EndingTriggered = false;
 	
@@ -30,14 +30,17 @@ public class DeathZoneScript : MonoBehaviour {
 	// Fades out the main theme
 	bool HandleMusicFade()
 	{
+		if(!DeathThemeTogether.audio.isPlaying) DeathThemeTogether.audio.Play ();
+
 		if (MainTheme.audio.volume > 0.1f)
 		{
-			MainTheme.audio.volume -= (1f);
-			TogetherTheme.audio.volume -= (1f);
+			if(MainTheme != null)
+				MainTheme.audio.volume -= (0.2f * Time.deltaTime);
+			if(TogetherTheme != null)
+				TogetherTheme.audio.volume -= (0.2f * Time.deltaTime);
 			return false;
 		}	
-		MainTheme.audio.Stop ();
-		TogetherTheme.audio.Stop ();
+
 		return true;
 	}
 
@@ -90,7 +93,7 @@ public class DeathZoneScript : MonoBehaviour {
 		if (m_EndingTriggered == true) 
 		{	
 			// Fade out primary music
-			//HandleMusicFade();
+			HandleMusicFade();
 			// Fade in blank display
 			if( HandledWhiteFadeIn() )
 			{

@@ -7,11 +7,11 @@ public class RandomizePlayers : MonoBehaviour {
     public RuntimeAnimatorController lightHairFemale;
     public RuntimeAnimatorController darkHairMale;
     public RuntimeAnimatorController darkHairFemale;
+	public GameObject player1;
+	public GameObject player2;
 
     void Awake()
     {
-        GameObject player1 = GameObject.FindGameObjectWithTag("Player");
-        GameObject player2 = GameObject.FindGameObjectWithTag("Player2");
         // Maybe swap which player is which
         if (Random.value >= 0.5f)
         {
