@@ -11,6 +11,7 @@ public class DeathZoneScript : MonoBehaviour {
 	public AudioSource TogetherTheme;
 	public AudioSource DeathThemeTogether;
 
+	public bool m_EndingSongPlayed = false;
 	bool m_EndingTriggered = false;
 	
 
@@ -30,7 +31,10 @@ public class DeathZoneScript : MonoBehaviour {
 	// Fades out the main theme
 	bool HandleMusicFade()
 	{
-		if(!DeathThemeTogether.audio.isPlaying) DeathThemeTogether.audio.Play ();
+		if(!DeathThemeTogether.audio.isPlaying) {
+			DeathThemeTogether.audio.Play ();
+			m_EndingSongPlayed = true;
+		}
 
 		if (MainTheme.audio.volume > 0.1f)
 		{
@@ -39,7 +43,7 @@ public class DeathZoneScript : MonoBehaviour {
 			if(TogetherTheme != null)
 				TogetherTheme.audio.volume -= (0.2f * Time.deltaTime);
 			return false;
-		}	
+		}
 
 		return true;
 	}
@@ -92,6 +96,9 @@ public class DeathZoneScript : MonoBehaviour {
 	{
 		if (m_EndingTriggered == true) 
 		{	
+			if (!DeathThemeTogether.audio.isPlaying && m_EndingSongPlayed == true) {
+				Application.LoadLevel("SplashScreen");
+			}
 			// Fade out primary music
 			HandleMusicFade();
 			// Fade in blank display
