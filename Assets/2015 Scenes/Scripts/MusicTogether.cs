@@ -14,6 +14,7 @@ public class MusicTogether : MonoBehaviour {
 	{
 		if (other.gameObject.tag == "Player" )
 		{
+			//Debug.Log ("hey we collided for music together.");
 			music.increaseVolume(1.0f);
 			isActive = true;
 		}
