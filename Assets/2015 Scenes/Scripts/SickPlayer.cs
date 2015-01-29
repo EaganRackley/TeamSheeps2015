@@ -5,7 +5,7 @@ using System.Collections;
 public class SickPlayer : MonoBehaviour {
 
     public const float SPEED_DECREASE_DELTA = 0.01f;
-    public const float DECREASE_SPEED_EVERY = 0.5f; //in seconds
+    public const float DECREASE_SPEED_EVERY = 2.00f; //in seconds
     private float speedDecreaseTimer = DECREASE_SPEED_EVERY;
     PlayerController playerComponent;
     public bool isVisible;
