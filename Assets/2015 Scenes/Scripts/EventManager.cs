@@ -19,6 +19,8 @@ public class EventManager : MonoBehaviour
 
     public GameObject fireflyPrefab;
 	public GameObject butterflyPrefab;
+	public GameObject speedPrefab;
+	public GameObject lanternPrefab;
 
     public delegate void EventFunction();
     public bool DEBUG = false;
@@ -38,9 +40,13 @@ public class EventManager : MonoBehaviour
         this.bottomRight = GameObject.FindGameObjectWithTag("BottomRight").transform;
 
         //Add your own game events here!
-		AddEvent(SpawnTwentyButterflies, 20);
-        AddEvent(SpawnTwentyFireflies, 60);
-        AddEvent(SpawnFiftyFireflies, 115);
+		AddEvent(SpawnTwentyButterflies,20);
+		AddEvent(SpawnSpeedPowerUps,    30);
+		AddEvent(SpawnLanternPowerUps,  30);
+        AddEvent(SpawnTwentyFireflies,  60);
+        AddEvent(SpawnFiftyFireflies,  115);
+		AddEvent(SpawnSpeedPowerUps,   120);
+		AddEvent(SpawnLanternPowerUps, 120);
 
         //TODO: Make this called when user enters game from start menu.
         StartGame();
@@ -72,6 +78,16 @@ public class EventManager : MonoBehaviour
 	void SpawnTwentyButterflies()
 	{
 		_SpawnPrefab(this.butterflyPrefab, 20);
+	}
+
+	void SpawnSpeedPowerUps()
+	{
+		_SpawnPrefab(this.speedPrefab, 40);
+	}
+
+	void SpawnLanternPowerUps()
+	{
+		_SpawnPrefab(this.lanternPrefab, 40);
 	}
 
 	void _SpawnPrefab(GameObject prefab, int number)
