@@ -27,8 +27,8 @@ public class SickPlayer : MonoBehaviour {
 		Vector3 pos = this.transform.position;
 		for(int i = 0; i < 10; i++)
 		{
-			Vector3 spawnPosition = new Vector3(Random.Range(pos.x-0.5f, pos.x+0.5f),
-		                                    Random.Range(pos.y-0.5f, pos.y+0.5f),
+			Vector3 spawnPosition = new Vector3(Random.Range(pos.x-0.27f, pos.x+0.27f),
+		                                    Random.Range(pos.y-0.27f, pos.y+0.27f),
 		                                    -1f);
 			Instantiate(prefabToSpawnOnDeath, spawnPosition, Quaternion.identity);
 		}

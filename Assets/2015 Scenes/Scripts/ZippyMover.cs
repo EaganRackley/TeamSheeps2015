@@ -26,7 +26,7 @@ public class ZippyMover : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-
+		currentDirection = Random.Range(0.0f, 360.0f);
 	}
 	
 	// Update is called once per frame
