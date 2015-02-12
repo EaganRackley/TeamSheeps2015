@@ -5,8 +5,7 @@ public class EventManager : MonoBehaviour
 {
     Transform topLeft;
     Transform bottomRight;
-
-
+	
     float gameStartTime;
 
     public float gameTime
@@ -82,7 +81,7 @@ public class EventManager : MonoBehaviour
 
 	void SpawnSpeedPowerUps()
 	{
-		_SpawnPrefab(this.speedPrefab, 40);
+		_SpawnPrefab(this.speedPrefab, 100);
 	}
 
 	void SpawnLanternPowerUps()
