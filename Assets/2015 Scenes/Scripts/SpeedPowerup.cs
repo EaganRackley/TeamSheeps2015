@@ -8,6 +8,7 @@ public class SpeedPowerup : AbstractPowerup
 
 	public float fallFromZ = -10.0f;
 	public float stopAtZ = -0.53f;
+	public bool startZIsRandom = false;
 
 	private float fallModifier = 30.0f;
 	private float timeFalling = 0.0f;
@@ -24,7 +25,15 @@ public class SpeedPowerup : AbstractPowerup
 		fallModifier = Random.Range(20.0f, 40.0f);
 		timeFalling = 0.0f;
 		Vector3 pos = this.transform.position;
-		pos.z = fallFromZ;
+		if(startZIsRandom)
+		{
+			pos.z = Random.Range(stopAtZ, fallFromZ);
+		}
+		else
+		{
+			pos.z = fallFromZ;
+		}
+
 		this.transform.position = pos;
 	}
 
