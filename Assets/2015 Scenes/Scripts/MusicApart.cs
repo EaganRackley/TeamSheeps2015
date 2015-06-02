@@ -1,8 +1,8 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class MusicApart : MonoBehaviour {
-	public MusicTogether m_MusicTogether;
+	public EmojiAndMusicStateManager m_MusicTogether;
 	public sound music;
 
 	// Use this for initialization

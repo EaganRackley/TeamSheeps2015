@@ -20,6 +20,9 @@ public class EmjoiBubble : MonoBehaviour {
 	void Start () 
 	{
 		State = EmojiState.Normal;
+		this.renderer.material.color = AdjustColorAlpha (this.renderer.material.color, -100000.0f);
+		TogetherEmoji.renderer.material.color = AdjustColorAlpha (TogetherEmoji.renderer.material.color, -100000.0f);
+		SicknessEmoji.renderer.material.color = AdjustColorAlpha (SicknessEmoji.renderer.material.color, -100000.0f);
 	}
 
 	// Adjust the alpha of the specified color and returns it
@@ -89,10 +92,13 @@ public class EmjoiBubble : MonoBehaviour {
 	// Follows the TargetPlayer transform
 	void FollowTarget()
 	{
-		Vector3 pos = TargetPlayer.transform.position;
-		pos.x += OffsetX;
-		pos.y += OffsetY;
-		this.transform.position = pos;
+		if(TargetPlayer != null )
+		{
+			Vector3 pos = TargetPlayer.transform.position;
+			pos.x += OffsetX;
+			pos.y += OffsetY;
+			this.transform.position = pos;
+		}
 	}
 	
 	// Update is called once per frame
