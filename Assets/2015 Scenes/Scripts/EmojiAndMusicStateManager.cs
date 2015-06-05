@@ -6,6 +6,8 @@ public class EmojiAndMusicStateManager : MonoBehaviour {
 	public bool isActive = false;
 	public EmjoiBubble P1EmojiBubble;
 	public EmjoiBubble P2EmojiBubble;
+	public PlayerController P2PlayerController;
+	public float SicknessSpeed = 1.6f;
 
 
 	// Use this for initialization
@@ -28,15 +30,29 @@ public class EmojiAndMusicStateManager : MonoBehaviour {
 	void OnTriggerExit(Collider other)
 	{
 		if (other.gameObject.tag == "Player") 
-		{
-						P1EmojiBubble.State = EmjoiBubble.EmojiState.Normal;
-						P2EmojiBubble.State = EmjoiBubble.EmojiState.Normal;
-						music.RemoveMusic ();
-						isActive = false;
+		{		
+			P1EmojiBubble.State = EmjoiBubble.EmojiState.Normal;
+
+			if(P2PlayerController.speed <= SicknessSpeed)
+			{
+				P2EmojiBubble.State = EmjoiBubble.EmojiState.Sick;
+			}
+			else
+			{
+				P2EmojiBubble.State = EmjoiBubble.EmojiState.Normal;
+			}
+						
+			music.RemoveMusic ();
+			isActive = false;
 		}
 	}
 
 	// Update is called once per frame
-	void Update () {
+	void Update () 
+	{
+		if((P2PlayerController.speed <= SicknessSpeed) && (P2EmojiBubble.State != EmjoiBubble.EmojiState.Together) )
+		{
+			P2EmojiBubble.State = EmjoiBubble.EmojiState.Sick;
+		}
 	}
 }

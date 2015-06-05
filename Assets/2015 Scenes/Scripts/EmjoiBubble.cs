@@ -6,20 +6,42 @@ public class EmjoiBubble : MonoBehaviour {
 	{
 		Normal,
 		Sick,
-		Together
+		Together,
+		Dead
 	}
-	public EmojiState State = EmojiState.Normal;
+	public EmojiState InitialState = EmojiState.Normal;
+	private EmojiState myState = EmojiState.Normal;
 	public float AlphaFadeSpeed = 0.5f;
-	public Transform TargetPlayer;
+	public PlayerController TargetPlayer;
 	public float OffsetX = 0.6f;
 	public float OffsetY = 0.6f;
 	public SpriteRenderer TogetherEmoji;
 	public SpriteRenderer SicknessEmoji;
 
+	/// <summary>
+	/// Gets or sets the current emoji state as long as the TargetPlayer isn't dead.
+	/// </summary>
+	/// <value>The state.</value>
+	public EmojiState State {
+		get {
+			return myState;
+		}
+		set {
+			if(TargetPlayer != null)
+			{
+				myState = value;
+			}
+			else
+			{
+				myState = EmojiState.Dead;
+			}
+		}
+	}
+	
 	// Use this for initialization
 	void Start () 
 	{
-		State = EmojiState.Normal;
+		myState = InitialState;
 		this.renderer.material.color = AdjustColorAlpha (this.renderer.material.color, -100000.0f);
 		TogetherEmoji.renderer.material.color = AdjustColorAlpha (TogetherEmoji.renderer.material.color, -100000.0f);
 		SicknessEmoji.renderer.material.color = AdjustColorAlpha (SicknessEmoji.renderer.material.color, -100000.0f);
@@ -58,13 +80,23 @@ public class EmjoiBubble : MonoBehaviour {
 	void HandledFading(bool showBubble)
 	{
 		// Hide the speech bubble if it's supposed to be hidden.
-		if(State == EmojiState.Normal)
+		if(myState == EmojiState.Normal)
 		{
 			HandleEmojiFade(TogetherEmoji, true);
 			HandleEmojiFade(SicknessEmoji, true);
 
 			if(this.renderer.material.color.a > 0f)
 			{
+				this.renderer.material.color = AdjustColorAlpha (this.renderer.material.color, -AlphaFadeSpeed);
+			}
+		}
+		else if(myState == EmojiState.Dead)
+		{
+			if(this.renderer.material.color.a > 0f)
+			{
+				HandleEmojiFade(TogetherEmoji, true);
+				HandleEmojiFade(SicknessEmoji, true);
+
 				this.renderer.material.color = AdjustColorAlpha (this.renderer.material.color, -AlphaFadeSpeed);
 			}
 		}
@@ -75,7 +107,7 @@ public class EmjoiBubble : MonoBehaviour {
 			{
 				this.renderer.material.color = AdjustColorAlpha (this.renderer.material.color, AlphaFadeSpeed);
 			}
-			if(State == EmojiState.Sick)
+			if(myState == EmojiState.Sick)
 			{
 				HandleEmojiFade(TogetherEmoji, true);
 				HandleEmojiFade(SicknessEmoji, false);
@@ -104,7 +136,15 @@ public class EmjoiBubble : MonoBehaviour {
 	// Update is called once per frame
 	void Update () 
 	{
-		HandledFading(State != EmojiState.Normal);
-		FollowTarget();
+		if(TargetPlayer != null)
+		{
+			HandledFading(myState != EmojiState.Normal);
+			FollowTarget();
+		}
+		else
+		{
+			myState = EmojiState.Dead;
+		}
+
 	}
 }
