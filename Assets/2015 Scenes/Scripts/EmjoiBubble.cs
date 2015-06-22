@@ -77,7 +77,7 @@ public class EmjoiBubble : MonoBehaviour {
 	}
 
 	// Handles fading the emoji bubble image in and out based on the current state
-	void HandledFading(bool showBubble)
+	void HandleFading(bool showBubble)
 	{
 		// Hide the speech bubble if it's supposed to be hidden.
 		if(myState == EmojiState.Normal)
@@ -138,12 +138,13 @@ public class EmjoiBubble : MonoBehaviour {
 	{
 		if(TargetPlayer != null)
 		{
-			HandledFading(myState != EmojiState.Normal);
+			HandleFading(myState != EmojiState.Normal);
 			FollowTarget();
 		}
 		else
 		{
 			myState = EmojiState.Dead;
+			HandleFading(false);
 		}
 
 	}
