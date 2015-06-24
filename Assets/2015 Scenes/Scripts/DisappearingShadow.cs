@@ -4,6 +4,7 @@ using System.Collections;
 public class DisappearingShadow : MonoBehaviour {
 
 	public Light fadeLight;
+	public Transform targetPlayer;
 
 	// Make sure our alpha is at max so that we can fade out the shadow player
 	void Start () {
@@ -35,6 +36,8 @@ public class DisappearingShadow : MonoBehaviour {
 		{
 			Destroy(this.gameObject);
 		}
+
+		this.transform.LookAt(targetPlayer.position);
 	
 	}
 }
