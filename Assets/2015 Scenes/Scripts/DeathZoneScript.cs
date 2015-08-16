@@ -19,29 +19,29 @@ public class DeathZoneScript : MonoBehaviour {
 	void Start () 
 	{
 		// Set both materials to transparent so we can play the game.
-		Color newColor = WhiteQuad.renderer.material.color;
+		Color newColor = WhiteQuad.GetComponent<Renderer>().material.color;
 		newColor.a = 0;
-		WhiteQuad.renderer.material.color = newColor;
+		WhiteQuad.GetComponent<Renderer>().material.color = newColor;
 
-		newColor = WhatDoWeDoNow.renderer.material.color;
+		newColor = WhatDoWeDoNow.GetComponent<Renderer>().material.color;
 		newColor.a = 0;
-		WhatDoWeDoNow.renderer.material.color = newColor;
+		WhatDoWeDoNow.GetComponent<Renderer>().material.color = newColor;
 	}
 
 	// Fades out the main theme
 	bool HandleMusicFade()
 	{
-		if(!DeathThemeTogether.audio.isPlaying) {
-			DeathThemeTogether.audio.Play ();
+		if(!DeathThemeTogether.GetComponent<AudioSource>().isPlaying) {
+			DeathThemeTogether.GetComponent<AudioSource>().Play ();
 			m_EndingSongPlayed = true;
 		}
 
-		if (MainTheme.audio.volume > 0.1f)
+		if (MainTheme.GetComponent<AudioSource>().volume > 0.1f)
 		{
 			if(MainTheme != null)
-				MainTheme.audio.volume -= (0.2f * Time.deltaTime);
+				MainTheme.GetComponent<AudioSource>().volume -= (0.2f * Time.deltaTime);
 			if(TogetherTheme != null)
-				TogetherTheme.audio.volume -= (0.2f * Time.deltaTime);
+				TogetherTheme.GetComponent<AudioSource>().volume -= (0.2f * Time.deltaTime);
 			return false;
 		}
 
@@ -51,12 +51,12 @@ public class DeathZoneScript : MonoBehaviour {
 	// Handles fading in the white quad
 	bool HandledWhiteFadeIn()
 	{
-		if(WhiteQuad.renderer.material.color.a < 1f)
+		if(WhiteQuad.GetComponent<Renderer>().material.color.a < 1f)
 		{
 			// Set both materials to transparent so we can play the game.
-			Color newColor = WhiteQuad.renderer.material.color;
+			Color newColor = WhiteQuad.GetComponent<Renderer>().material.color;
 			newColor.a += 0.25f * Time.deltaTime;
-			WhiteQuad.renderer.material.color = newColor;
+			WhiteQuad.GetComponent<Renderer>().material.color = newColor;
 			return false;
 		}
 		return true;
@@ -64,16 +64,16 @@ public class DeathZoneScript : MonoBehaviour {
 
 	bool HandledTextFadeIn()
 	{
-		if (DeathThemeTogether.audio.isPlaying == false)
-						DeathThemeTogether.audio.Play ();
+		if (DeathThemeTogether.GetComponent<AudioSource>().isPlaying == false)
+						DeathThemeTogether.GetComponent<AudioSource>().Play ();
 
-		if(WhatDoWeDoNow.renderer.material.color.a < 1f)
+		if(WhatDoWeDoNow.GetComponent<Renderer>().material.color.a < 1f)
 		{
 			// Set both materials to transparent so we can play the game.
-			Color newColor = WhatDoWeDoNow.renderer.material.color;
+			Color newColor = WhatDoWeDoNow.GetComponent<Renderer>().material.color;
 			newColor.a += 0.25f * Time.deltaTime;
 			WhatDoWeDoNow
-				.renderer.material.color = newColor;
+				.GetComponent<Renderer>().material.color = newColor;
 			return false;
 		}
 		return true;
@@ -96,7 +96,7 @@ public class DeathZoneScript : MonoBehaviour {
 	{
 		if (m_EndingTriggered == true) 
 		{	
-			if (!DeathThemeTogether.audio.isPlaying && m_EndingSongPlayed == true) {
+			if (!DeathThemeTogether.GetComponent<AudioSource>().isPlaying && m_EndingSongPlayed == true) {
 				Application.LoadLevel("SplashScreen");
 			}
 			// Fade out primary music

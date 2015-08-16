@@ -12,7 +12,7 @@ public class LoadGame : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if (Input.anyKeyDown) {
-			if (music.audio.volume > 0.4f)
+			if (music.GetComponent<AudioSource>().volume > 0.4f)
 			{
 				music.RemoveMusic();
 			}

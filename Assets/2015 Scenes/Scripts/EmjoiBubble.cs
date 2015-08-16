@@ -42,9 +42,9 @@ public class EmjoiBubble : MonoBehaviour {
 	void Start () 
 	{
 		myState = InitialState;
-		this.renderer.material.color = AdjustColorAlpha (this.renderer.material.color, -100000.0f);
-		TogetherEmoji.renderer.material.color = AdjustColorAlpha (TogetherEmoji.renderer.material.color, -100000.0f);
-		SicknessEmoji.renderer.material.color = AdjustColorAlpha (SicknessEmoji.renderer.material.color, -100000.0f);
+		this.GetComponent<Renderer>().material.color = AdjustColorAlpha (this.GetComponent<Renderer>().material.color, -100000.0f);
+		TogetherEmoji.GetComponent<Renderer>().material.color = AdjustColorAlpha (TogetherEmoji.GetComponent<Renderer>().material.color, -100000.0f);
+		SicknessEmoji.GetComponent<Renderer>().material.color = AdjustColorAlpha (SicknessEmoji.GetComponent<Renderer>().material.color, -100000.0f);
 	}
 
 	// Adjust the alpha of the specified color and returns it
@@ -66,13 +66,13 @@ public class EmjoiBubble : MonoBehaviour {
 
 	void HandleEmojiFade(SpriteRenderer emoji, bool hideEmoji)
 	{
-		if(hideEmoji && emoji.renderer.material.color.a > 0f)
+		if(hideEmoji && emoji.GetComponent<Renderer>().material.color.a > 0f)
 		{
-			emoji.renderer.material.color = AdjustColorAlpha (emoji.renderer.material.color, -AlphaFadeSpeed);
+			emoji.GetComponent<Renderer>().material.color = AdjustColorAlpha (emoji.GetComponent<Renderer>().material.color, -AlphaFadeSpeed);
 		}
-		else if(!hideEmoji && emoji.renderer.material.color.a < 1f)
+		else if(!hideEmoji && emoji.GetComponent<Renderer>().material.color.a < 1f)
 		{
-			emoji.renderer.material.color = AdjustColorAlpha (emoji.renderer.material.color, AlphaFadeSpeed);
+			emoji.GetComponent<Renderer>().material.color = AdjustColorAlpha (emoji.GetComponent<Renderer>().material.color, AlphaFadeSpeed);
 		}
 	}
 
@@ -85,27 +85,27 @@ public class EmjoiBubble : MonoBehaviour {
 			HandleEmojiFade(TogetherEmoji, true);
 			HandleEmojiFade(SicknessEmoji, true);
 
-			if(this.renderer.material.color.a > 0f)
+			if(this.GetComponent<Renderer>().material.color.a > 0f)
 			{
-				this.renderer.material.color = AdjustColorAlpha (this.renderer.material.color, -AlphaFadeSpeed);
+				this.GetComponent<Renderer>().material.color = AdjustColorAlpha (this.GetComponent<Renderer>().material.color, -AlphaFadeSpeed);
 			}
 		}
 		else if(myState == EmojiState.Dead)
 		{
-			if(this.renderer.material.color.a > 0f)
+			if(this.GetComponent<Renderer>().material.color.a > 0f)
 			{
 				HandleEmojiFade(TogetherEmoji, true);
 				HandleEmojiFade(SicknessEmoji, true);
 
-				this.renderer.material.color = AdjustColorAlpha (this.renderer.material.color, -AlphaFadeSpeed);
+				this.GetComponent<Renderer>().material.color = AdjustColorAlpha (this.GetComponent<Renderer>().material.color, -AlphaFadeSpeed);
 			}
 		}
 		// Otherwise show the speech bubble if it's supposed to be shown :)
 		else 
 		{
-			if(this.renderer.material.color.a < 1f)
+			if(this.GetComponent<Renderer>().material.color.a < 1f)
 			{
-				this.renderer.material.color = AdjustColorAlpha (this.renderer.material.color, AlphaFadeSpeed);
+				this.GetComponent<Renderer>().material.color = AdjustColorAlpha (this.GetComponent<Renderer>().material.color, AlphaFadeSpeed);
 			}
 			if(myState == EmojiState.Sick)
 			{

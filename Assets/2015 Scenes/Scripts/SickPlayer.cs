@@ -63,6 +63,6 @@ public class SickPlayer : MonoBehaviour {
     bool InCameraView()
     {
         Plane[] frustum = GeometryUtility.CalculateFrustumPlanes(Camera.main);
-        return GeometryUtility.TestPlanesAABB(frustum, this.collider.bounds);
+        return GeometryUtility.TestPlanesAABB(frustum, this.GetComponent<Collider>().bounds);
     }
 }

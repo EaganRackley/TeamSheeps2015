@@ -19,9 +19,9 @@ public class SheepBehavior : MonoBehaviour {
 		 JumpTimer += 0.5f * Time.deltaTime;
 		 if(JumpTimer > MAX_TIMER ) {
 			JumpTimer = 0f;
-			Vector3 vel = this.rigidbody.velocity;
+			Vector3 vel = this.GetComponent<Rigidbody>().velocity;
 			vel.z = -5f;
-			this.rigidbody.velocity = vel;
+			this.GetComponent<Rigidbody>().velocity = vel;
 		}
 		//rotation.z =  rotation.z + 0.01f;
 		//this.transform.Rotate(rotation);
