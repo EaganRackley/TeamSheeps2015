@@ -25,6 +25,8 @@ public class PlayerNetworkSetup : NetworkBehaviour {
 			GetComponent<PlayerController>().enabled = true;
 			this.tag = "Player";
 			nameLabel.text = "Player id: local";
+            SmoothCamera2D camera = GameObject.FindObjectOfType<SmoothCamera2D>();
+            camera.setTarget(this.transform);
 		}
 		else
 		{

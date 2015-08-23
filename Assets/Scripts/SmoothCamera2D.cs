@@ -14,6 +14,11 @@ public class SmoothCamera2D : MonoBehaviour {
     Transform topLeft;
     Transform bottomRight;
 
+    public void setTarget(Transform newTarget)
+    {
+        target = newTarget;
+    }
+
     void Awake()
     {
         this.topLeft = GameObject.FindGameObjectWithTag("TopLeft").transform;
@@ -26,11 +31,7 @@ public class SmoothCamera2D : MonoBehaviour {
     }
 
 	void Update () {
-		if (target == null) 
-		{
-			target = GameObject.FindGameObjectWithTag("Player").transform;
-		} 
-		else 
+		if (target != null) 
 		{
 			Vector3 pos = this.transform.position;
 			pos.x = Mathf.SmoothDamp (pos.x, target.position.x, ref(velocity.x), smoothTime);
