@@ -6,7 +6,8 @@ using UnityEngine.Networking;
 /// This script handles configuring each NetworkPlayer object when it's first spawned by the Network Manager.
 /// </summary>
 public class PlayerNetworkSetup : NetworkBehaviour {
-	public RuntimeAnimatorController lightHairMale;
+    public GameObject playerLabelPrefab;
+    public RuntimeAnimatorController lightHairMale;
 	public RuntimeAnimatorController lightHairFemale;
 	public RuntimeAnimatorController darkHairMale;
 	public RuntimeAnimatorController darkHairFemale;
@@ -15,8 +16,12 @@ public class PlayerNetworkSetup : NetworkBehaviour {
 	void Start () 
 	{
         // Grab the Network Players Text Mesh component so we can set the player name
-		TextMesh nameLabel = GetComponentsInChildren<TextMesh>()[0];
-
+		GameObject gObj = Instantiate (playerLabelPrefab, this.transform.position, Quaternion.identity) as GameObject;
+		PlayerLabel playerLabel = gObj.GetComponent<PlayerLabel> ();
+		TextMesh textMesh = playerLabel.getTextMesh ();
+		playerLabel.offsetFromParent = new Vector3 (0.0f, -0.5f, 0.0f);
+        playerLabel.parentTransform = this.transform;
+        
 		// If we're setting up the local player, we want the camera to follow him/her so we set the "Player" tag
 		// (all other players are tagged "OtherPlayer" by default, and enable the PlayerController object so that
 		// it's represented over the network : - )
@@ -24,13 +29,13 @@ public class PlayerNetworkSetup : NetworkBehaviour {
 		{
 			GetComponent<PlayerController>().enabled = true;
 			this.tag = "Player";
-			nameLabel.text = "Player id: local";
+            playerLabel.setText("Player id: local");
             SmoothCamera2D camera = GameObject.FindObjectOfType<SmoothCamera2D>();
             camera.setTarget(this.transform);
 		}
 		else
 		{
-			nameLabel.text = "Player id: " + netId.ToString();
+            playerLabel.setText("Player id: " + netId.ToString());
 		}
 
         // Based on the player ID, set the character to be used by the player.

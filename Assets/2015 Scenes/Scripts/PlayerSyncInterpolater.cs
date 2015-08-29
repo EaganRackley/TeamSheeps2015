@@ -2,10 +2,6 @@
 using System.Collections;
 using UnityEngine.Networking;
 
-using UnityEngine;
-using System.Collections;
-using UnityEngine.Networking;
-
 public class PlayerSyncInterpolater : NetworkBehaviour
 {
 
