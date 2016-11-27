@@ -19,7 +19,7 @@ public class ServerProperties : NetworkBehaviour {
     [Command]
     public void CmdAddServerElement(string guid)
     {
-        ElementProperty newProperty = new ElementProperty(guid, true, 0);
+        ElementProperty newProperty = new ElementProperty(guid, true, 0, isServer);
         Elements.Add(newProperty);
     }
 

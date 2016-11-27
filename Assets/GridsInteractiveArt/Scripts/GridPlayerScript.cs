@@ -3,23 +3,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.Networking;
 
-public class SyncListProperties : SyncListStruct<ElementProperty> { }
-
 /// <summary>
 ///  This is the master script for the GridPlayerObject that will control each individual painted element
 ///  on the grid board, including position, visibility, and color.
 /// </summary>
 public class GridPlayerScript : NetworkBehaviour
-{
+{   
+    public class SyncListProperties : SyncListStruct<ElementProperty> { }
+
     public GameObject paintElementPrefab;
 
-    private bool myPlayerIsMainPlayer;
-    
+    private Dictionary<string, GameObject> myPaintElements = new Dictionary<string, GameObject>();
+
     public SyncListProperties mySyncElementProperties = new SyncListProperties();
+
+    public List<ElementProperty> myElementsProperties = new List<ElementProperty>();
 
     public bool myFrameIsDirty = false;
 
-    private Dictionary<string, GameObject> myPaintElements = new Dictionary<string, GameObject>();
     
     /// <summary>
     /// When the server starts we populate our SyncList myElements with a list of properties associated with the default state of each
@@ -28,49 +29,51 @@ public class GridPlayerScript : NetworkBehaviour
     /// </summary>
     public override void OnStartServer()
     {
+        base.OnStartServer();
+       
         mySyncElementProperties.Clear();
 
         ElementScript[] elements = FindObjectsOfType<ElementScript>();
 
         foreach (var element in elements)
         {
-            ElementProperty newProperty = new ElementProperty(element.gameObject.name, element.gameObject.GetComponent<ElementScript>().isVisible, Random.Range(0, 12));
+            ElementProperty newProperty = new ElementProperty(element.gameObject.name, element.gameObject.GetComponent<ElementScript>().isVisible, Random.Range(0, 12), isServer);
             mySyncElementProperties.Add(newProperty);
         }
+
+        mySyncElementProperties.Callback = OnServerElementsChanged;
     }
 
     /// <summary>
     /// On Start the player objects obtains a list of all the paint elements in the scene to reference later...
     /// </summary>
-    void Start()
+    public override void OnStartClient()
     {
+        base.OnStartClient();
         ElementScript[] paintElements = FindObjectsOfType<ElementScript>();
         foreach (var element in paintElements)
         {
             myPaintElements.Add(element.gameObject.name, element.gameObject);
         }
 
-        mySyncElementProperties.Callback = OnServerElementsChanged;
-
         myFrameIsDirty = true;
     }
-
+    
     void OnServerElementsChanged(SyncListStruct<ElementProperty>.Operation op, int itemIndex)
     {
-        string output = "ElementChanged:" + op + " Index: " + itemIndex.ToString() + " Values: ";
+        string output = "ElementsChanged Server: " + mySyncElementProperties[itemIndex].isServer;
 
-        for (int index = 0; index < mySyncElementProperties.Count; index++)
-        {
-            output += "," + mySyncElementProperties[index].isVisible.ToString();
-        }
+        //for (int index = 0; index < mySyncElementProperties.Count; index++)
+        //{
+        //    output += "," + mySyncElementProperties[index].isVisible.ToString();
+        //}
+        //
+        // Debug.Log(output);
 
-        Debug.Log(output);
-
-        if (op == SyncListStruct<ElementProperty>.Operation.OP_INSERT)
-        {
-            Debug.Log("Frame is Dirty");
-            myFrameIsDirty = true;
-        }
+        // if (op == SyncListStruct<ElementProperty>.Operation.OP_INSERT)
+        // {
+        //     myFrameIsDirty = true;
+        // }
     }
 
     /// <summary>
@@ -81,17 +84,11 @@ public class GridPlayerScript : NetworkBehaviour
     {
         if(myFrameIsDirty)
         {
-            Debug.Log("Redrawing Frame");
             myFrameIsDirty = false;
-
-            Debug.Log("Child count: " + myPaintElements.Count);
-
-            foreach (ElementProperty element in mySyncElementProperties)
+            foreach (ElementProperty element in myElementsProperties)
             {
-                Debug.Log("Checking element ID: " + element.ID);
                 if (myPaintElements.ContainsKey(element.ID))
                 {
-                    Debug.Log("Match was found! Visible: " + myPaintElements[element.ID].GetComponent<ElementScript>().isVisible.ToString());
                     myPaintElements[element.ID].GetComponent<ElementScript>().isVisible = element.isVisible;
                     myPaintElements[element.ID].GetComponent<ElementScript>().SetShapeFrame(element.shapeFrame);
                 }
@@ -100,13 +97,12 @@ public class GridPlayerScript : NetworkBehaviour
     }
 
     /// <summary>
-    ///  Method called by child objects to handle input behavior, will trigger property changes
+    ///  Method called by child objects to handle input behavior, will triggering property changes
     ///  based on current player state
     /// </summary>
     /// <param name="elementID"></param>
     public void OnHandleOnChildTouchUp(ElementScript element)
     {
-        Debug.Log("OnHandleOnChildTouchUp");
         CmdSetVisibility(element.name, !element.isVisible);
     }
 
@@ -121,10 +117,10 @@ public class GridPlayerScript : NetworkBehaviour
     [Command]
     public void CmdSetVisibility(string ID, bool isVisible)
     {
-        Debug.Log("CmdSetVisibility ID: " + ID + " " + isVisible );
+        Debug.Log("CmdSetVisibility ID: " + ID + " Visible: " + isVisible + " Server: " + isServer);
 
         int targetIndex = -1;
-        ElementProperty newElement = new ElementProperty("Empty", false, 0);
+        ElementProperty newElement = new ElementProperty("Empty", false, 0, isServer);
         for (int index = 0; index < mySyncElementProperties.Count; index++)
         {
             ElementProperty element = mySyncElementProperties[index];
@@ -134,17 +130,31 @@ public class GridPlayerScript : NetworkBehaviour
                 newElement = element;
             }
         }
-        if(targetIndex >= 0)
+        if (targetIndex >= 0)
         {
-            if(newElement.isVisible == false && isVisible == true)
+            if (newElement.isVisible == false && isVisible == true)
             {
                 newElement.shapeFrame = Random.Range(0, 12);
             }
             newElement.isVisible = isVisible;
-            mySyncElementProperties.Dirty(targetIndex);
             mySyncElementProperties.RemoveAt(targetIndex);
             mySyncElementProperties.Insert(targetIndex, newElement);
+            //myFrameIsDirty = true;
         }
+        RpcSetVisibility(ID, isVisible);
+    }
+
+    [ClientRpc]
+    void RpcSetVisibility(string ID, bool isVisible)
+    {
+        
+        myElementsProperties.Clear();
+        foreach(ElementProperty element in mySyncElementProperties)
+        {
+            myElementsProperties.Add(element);
+        }
+
+        myFrameIsDirty = true;
     }
 
 

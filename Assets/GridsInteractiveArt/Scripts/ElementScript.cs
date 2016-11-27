@@ -22,7 +22,7 @@ public class ElementScript : MonoBehaviour
 
     public void SetShapeFrame(int frame)
     {
-        Debug.Assert(frame > 0);
+        Debug.Assert(frame >= 0);
         Debug.Assert(frame < WhiteSprites.Count);
         GetComponent<SpriteRenderer>().sprite = WhiteSprites[frame];
     }
