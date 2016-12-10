@@ -8,7 +8,9 @@ using UnityEngine.Networking;
 ///  on the grid board, including position, visibility, and color.
 /// </summary>
 public class GridPlayerScript : NetworkBehaviour
-{   
+{
+    public static GridPlayerScript myInstance;
+
     public class SyncListProperties : SyncListStruct<ElementProperty> { }
 
     public GameObject paintElementPrefab;
@@ -21,7 +23,12 @@ public class GridPlayerScript : NetworkBehaviour
 
     public bool myFrameIsDirty = false;
 
-    
+    void Start()
+    {
+        myInstance = this;
+    }
+
+
     /// <summary>
     /// When the server starts we populate our SyncList myElements with a list of properties associated with the default state of each
     /// child element in the piece. From this point forward that list will dictate the master state applied to each child object across
@@ -103,7 +110,13 @@ public class GridPlayerScript : NetworkBehaviour
     /// <param name="elementID"></param>
     public void OnHandleOnChildTouchUp(ElementScript element)
     {
-        CmdSetVisibility(element.name, !element.isVisible);
+        CmdServerSetVisibility(element.name, !element.isVisible);
+    }
+
+    [Command]
+    public void CmdServerSetVisibility(string ID, bool isVisible)
+    {
+        myInstance.CmdSetVisibility(ID, isVisible);
     }
 
 
@@ -146,8 +159,7 @@ public class GridPlayerScript : NetworkBehaviour
 
     [ClientRpc]
     void RpcSetVisibility(string ID, bool isVisible)
-    {
-        
+    {   
         myElementsProperties.Clear();
         foreach(ElementProperty element in mySyncElementProperties)
         {
@@ -156,6 +168,5 @@ public class GridPlayerScript : NetworkBehaviour
 
         myFrameIsDirty = true;
     }
-
 
 }
