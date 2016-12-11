@@ -12,7 +12,13 @@ public class GridPlayerScript : NetworkBehaviour
     /// <summary>
     ///  Single instance of the server object (for some reason not using this idiom causes issues with more than one item trying to be the server - I don't know what I'm doing wrong, but this works)
     /// </summary>
-    public static GridPlayerScript myInstance;
+    public static GridPlayerScript myMasterInstance;
+
+    /// <summary>
+    /// Indicates whether the player object is the master instance that stores the ServerElements property used by other players.
+    /// </summary>
+    [SyncVar]
+    public bool isMasterInstance = false;
 
     /// <summary>
     /// SyncList object of ElementProperty values
@@ -20,63 +26,105 @@ public class GridPlayerScript : NetworkBehaviour
     public class SyncListProperties : SyncListStruct<ElementProperty> { }
 
     /// <summary>
-    /// Paint elements based on game objects in the scene that we can set properties on based on the server sync elements.
-    /// </summary>
-    private Dictionary<string, GameObject> mySceneElements = new Dictionary<string, GameObject>();
-
-    /// <summary>
     /// These are the elements that remain synced between the server and the client.
     /// </summary>
-    public SyncListProperties myServerElements = new SyncListProperties();
+    public SyncListProperties ServerElements = new SyncListProperties();
+
+    public Color ClientColor;
+
+    /// <summary>
+    /// Paint elements based on game objects in the scene that we can set properties on based on the server sync elements.
+    /// </summary>
+    private Dictionary<string, GameObject> mySceneElements = new Dictionary<string, GameObject>();   
 
     /// <summary>
     /// Indicates whether the client frame is dirty or not, and needs to be updated based on changes in the server elements
     /// </summary>
-    public bool myFrameIsDirty = false;
+    private bool myFrameIsDirty = false;    
 
     /// <summary>
     /// GameObject start method sets reference to the single instance on the server.
     /// </summary>
     void Start()
     {
-        myInstance = this;
+        //myMasterInstance = this;           
     }
 
     /// <summary>
-    /// When the server starts populate myServerElements with all the default properties of the GameObjects in the scene with an "ElementScript" attribute.
+    /// When the server starts populate ServerElements with all the default properties of the GameObjects in the scene with an "ElementScript" attribute.
     /// (This way our server elements are always updated dynamically based on what's actually in the scene)
     /// </summary>
     public override void OnStartServer()
     {
         base.OnStartServer();
-       
-        myServerElements.Clear();
 
-        ElementScript[] elements = FindObjectsOfType<ElementScript>();
-
-        foreach (var element in elements)
+        // Get the master player script object on the server, if one doesn't
+        // exist already, then assign this player object as the master instance
+        // so that other objects will use it as such.
+        GridPlayerScript[] players = FindObjectsOfType<GridPlayerScript>();
+        if (players.Length <= 1)
         {
-            ElementProperty newProperty = new ElementProperty(element.gameObject.name, element.gameObject.GetComponent<ElementScript>().isVisible, Random.Range(0, 12), isServer);
-            myServerElements.Add(newProperty);
-        }
+            isMasterInstance = true;
+            myMasterInstance = this;
+            myMasterInstance.ServerElements.Clear();
 
+            ElementScript[] elements = FindObjectsOfType<ElementScript>();
+
+            foreach (var element in elements)
+            {
+                ElementProperty newProperty = new ElementProperty(element.gameObject.name, element.gameObject.GetComponent<ElementScript>().isVisible, Random.Range(0, 12), isServer);
+                myMasterInstance.ServerElements.Add(newProperty);
+            }
+        }
+        else
+        {
+            foreach (GridPlayerScript player in players)
+            {
+                if (player.isMasterInstance == true)
+                {
+                    myMasterInstance = player;
+                }
+            }
+        }        
+        
         // Use this to print debug messages when server elements change
         // myServerElements.Callback = OnServerElementsChanged;
     }
 
     /// <summary>
     /// When the client starts we populate mySceneElemetns with all the GameObjects in the scene with an "ElementScript" attribute.
-    /// (This way we can always assign properties in myServerElements visually to the scene when there's an update)
+    /// (This way we can always assign properties in ServerElements visually to the scene when there's an update)
     /// </summary>
     public override void OnStartClient()
     {
         base.OnStartClient();
+
+        // Get the master player script object on the server, if one doesn't
+        // exist already, then assign this player object as the master instance
+        // so that other objects will use it as such.
+        GridPlayerScript[] players = FindObjectsOfType<GridPlayerScript>();
+        if (players.Length <= 1)
+        {
+            myMasterInstance = this;
+        }
+        else
+        {
+            foreach (GridPlayerScript player in players)
+            {
+                if (player.isMasterInstance == true)
+                {
+                    myMasterInstance = player;
+                }
+            }
+        }
+
+        // Set up references to the paint elements that we'll be modifying from the scene
         ElementScript[] paintElements = FindObjectsOfType<ElementScript>();
         foreach (var element in paintElements)
         {
             mySceneElements.Add(element.gameObject.name, element.gameObject);
         }
-
+        
         myFrameIsDirty = true;
     }
     
@@ -89,12 +137,13 @@ public class GridPlayerScript : NetworkBehaviour
         if(myFrameIsDirty)
         {
             myFrameIsDirty = false;
-            foreach (ElementProperty element in myServerElements)
+            foreach (ElementProperty element in myMasterInstance.ServerElements)
             {
                 if (mySceneElements.ContainsKey(element.ID))
                 {
-                    mySceneElements[element.ID].GetComponent<ElementScript>().isVisible = element.isVisible;
+                    mySceneElements[element.ID].GetComponent<ElementScript>().SetVisible(element.isVisible);
                     mySceneElements[element.ID].GetComponent<ElementScript>().SetShapeFrame(element.shapeFrame);
+                    mySceneElements[element.ID].GetComponent<Renderer>().material.color = element.shapeColor;
                 }
             }
         }
@@ -107,7 +156,13 @@ public class GridPlayerScript : NetworkBehaviour
     /// <param name="elementID"></param>
     public void OnHandleOnChildTouchUp(ElementScript element)
     {
-        CmdServerSetVisibility(element.name, !element.isVisible);
+        CmdServerSetVisibility(element.name, !element.isVisible, ClientColor);
+    }
+
+
+    public void OnConnectedToServer()
+    {
+        
     }
 
     /// <summary>
@@ -116,11 +171,10 @@ public class GridPlayerScript : NetworkBehaviour
     /// <param name="ID">The name of the component to change.</param>
     /// <param name="isVisible">Whether to show or hide that component.</param>
     [Command]
-    public void CmdServerSetVisibility(string ID, bool isVisible)
+    public void CmdServerSetVisibility(string ID, bool isVisible, Color color)
     {
-        myInstance.CmdSetVisibility(ID, isVisible);
+        myMasterInstance.CmdSetVisibility(ID, isVisible, color);
     }
-
 
     /// <summary>
     ///  This Command method sets the network sync properties for all clients based on the parameters specified.
@@ -130,30 +184,30 @@ public class GridPlayerScript : NetworkBehaviour
     /// <param name="ID">The ID of the shape being changed.</param>
     /// <param name="isVisible">The visible state of the shape being changed.</param>
     [Command]
-    public void CmdSetVisibility(string ID, bool isVisible)
+    public void CmdSetVisibility(string ID, bool isVisible, Color color)
     {
         //Debug.Log("CmdSetVisibility ID: " + ID + " Visible: " + isVisible + " Server: " + isServer);        
         int targetIndex = -1;
         ElementProperty newElement = new ElementProperty("Empty", false, 0, isServer);
-        for (int index = 0; index < myServerElements.Count; index++)
+        for (int index = 0; index < ServerElements.Count; index++)
         {
-            ElementProperty element = myServerElements[index];
+            ElementProperty element = ServerElements[index];
             if (element.ID.Equals(ID))
             {
                 targetIndex = index;
                 newElement.ID = element.ID;
                 newElement.isServer = element.isServer;
                 newElement.isVisible = element.isVisible;
+                newElement.shapeColor = color;
                 if (newElement.isVisible == false && isVisible == true)
                 {
                     newElement.shapeFrame = Random.Range(0, 12);
                 }
                 newElement.isVisible = isVisible;
-                myServerElements[targetIndex] = newElement;
+                ServerElements[targetIndex] = newElement;
+                RpcClientFrameIsDirty(newElement.ID, newElement.isVisible, newElement.shapeColor);
             }
-        }
-
-        RpcClientFrameIsDirty();
+        }        
     }
 
     /// <summary>
@@ -162,9 +216,14 @@ public class GridPlayerScript : NetworkBehaviour
     /// <param name="ID"></param>
     /// <param name="isVisible"></param>
     [ClientRpc]
-    void RpcClientFrameIsDirty()
+    void RpcClientFrameIsDirty(string ID, bool isVisible, Color color)
     {           
         myFrameIsDirty = true;
+        if(mySceneElements.ContainsKey(ID))
+        {
+            mySceneElements[ID].GetComponent<ElementScript>().SetVisible(isVisible);            
+        }
+        
     }
 
     /// <summary>
