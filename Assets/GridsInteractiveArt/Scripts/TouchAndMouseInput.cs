@@ -14,6 +14,8 @@ public class TouchAndMouseInput : NetworkBehaviour {
     // Update is called once per frame
     void Update ()
     {
+        if (inputCamera == null) return;
+
         // If there's only a single touch or a user is releasing the mouse button
         // use mouse input controls to interact with the scene. Otherwise use touch
         // input controls.

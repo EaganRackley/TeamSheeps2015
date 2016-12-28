@@ -5,14 +5,14 @@ using System.Collections;
 public class FlickeringLight : MonoBehaviour {
 
     Light myLittleLight;
-    float initialIntensity;
+    //float initialIntensity;
     float initialRange;
     public float flickerAmount = 0.1f;
 
     void Awake()
     {
         this.myLittleLight = GetComponent<Light>();
-        this.initialIntensity = myLittleLight.intensity;
+        //this.initialIntensity = myLittleLight.intensity;
         this.initialRange = myLittleLight.range;
     }
 

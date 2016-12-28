@@ -5,7 +5,7 @@ using System.Collections;
 public class sound : MonoBehaviour {
 
 	private bool m_hearingSound = false;
-	private float m_maxSoundVolume = 0;
+	//private float m_maxSoundVolume = 0;
 	private AudioSource m_AudioSrc;
 
 
@@ -35,7 +35,7 @@ public class sound : MonoBehaviour {
 	}
 
 	public void increaseVolume(float maxSoundVolume) {
-		m_maxSoundVolume = maxSoundVolume;
+		//m_maxSoundVolume = maxSoundVolume;
 		m_hearingSound = true;
 	}
 

@@ -30,7 +30,7 @@ public class GridPlayerScript : NetworkBehaviour
     /// </summary>
     public SyncListProperties ServerElements = new SyncListProperties();
 
-    public Color ClientColor;
+    private Color myClientColor;
 
     /// <summary>
     /// Paint elements based on game objects in the scene that we can set properties on based on the server sync elements.
@@ -48,6 +48,12 @@ public class GridPlayerScript : NetworkBehaviour
     void Start()
     {
         //myMasterInstance = this;           
+        myClientColor = new Color(1.0f, 0.0f, 0.1f);
+    }
+
+    void setClientClolor(Color clientColor)
+    {
+        myClientColor = clientColor;
     }
 
     /// <summary>
@@ -141,9 +147,14 @@ public class GridPlayerScript : NetworkBehaviour
             {
                 if (mySceneElements.ContainsKey(element.ID))
                 {
-                    mySceneElements[element.ID].GetComponent<ElementScript>().SetVisible(element.isVisible);
+                    //mySceneElements[element.ID].GetComponent<ElementScript>().SetVisible(element.isVisible);
                     mySceneElements[element.ID].GetComponent<ElementScript>().SetShapeFrame(element.shapeFrame);
                     mySceneElements[element.ID].GetComponent<Renderer>().material.color = element.shapeColor;
+
+                    if(element.ID == "ElementR0C0")
+                    {
+                        Debug.Log("Element R0C0 Visibility set to: " + element.isVisible.ToString());
+                    }
                 }
             }
         }
@@ -156,7 +167,7 @@ public class GridPlayerScript : NetworkBehaviour
     /// <param name="elementID"></param>
     public void OnHandleOnChildTouchUp(ElementScript element)
     {
-        CmdServerSetVisibility(element.name, !element.isVisible, ClientColor);
+        CmdServerSetVisibility(element.name, !element.isVisible, myClientColor);
     }
 
 
@@ -186,7 +197,7 @@ public class GridPlayerScript : NetworkBehaviour
     [Command]
     public void CmdSetVisibility(string ID, bool isVisible, Color color)
     {
-        //Debug.Log("CmdSetVisibility ID: " + ID + " Visible: " + isVisible + " Server: " + isServer);        
+        Debug.Log("CmdSetVisibility ID: " + ID + " Visible: " + isVisible + " Server: " + isServer);        
         int targetIndex = -1;
         ElementProperty newElement = new ElementProperty("Empty", false, 0, isServer);
         for (int index = 0; index < ServerElements.Count; index++)

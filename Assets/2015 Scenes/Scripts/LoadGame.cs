@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 using System.Collections;
 
 public class LoadGame : MonoBehaviour {
@@ -18,7 +19,7 @@ public class LoadGame : MonoBehaviour {
 			}
 			else
 			{
-				Application.LoadLevel("FinalScene");
+                SceneManager.LoadScene("FinalScene");
 			}
 		}
 	}

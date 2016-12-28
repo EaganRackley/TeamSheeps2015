@@ -157,7 +157,7 @@ public class PlayerController : MonoBehaviour
 	{
 		if( Input.GetKey(jumpKey) )
 		{
-			if(isGrounded = true)
+			if(isGrounded == true)
 			{
 				velocity_z -= speed * 4;
 				isGrounded = false;

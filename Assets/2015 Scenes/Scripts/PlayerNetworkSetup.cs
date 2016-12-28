@@ -18,7 +18,7 @@ public class PlayerNetworkSetup : NetworkBehaviour {
         // Grab the Network Players Text Mesh component so we can set the player name
 		GameObject gObj = Instantiate (playerLabelPrefab, this.transform.position, Quaternion.identity) as GameObject;
 		PlayerLabel playerLabel = gObj.GetComponent<PlayerLabel> ();
-		TextMesh textMesh = playerLabel.getTextMesh ();
+		//TextMesh textMesh = playerLabel.getTextMesh ();
 		playerLabel.offsetFromParent = new Vector3 (0.0f, -0.5f, 0.0f);
         playerLabel.parentTransform = this.transform;
         

@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 using System.Collections;
 
 public class loadGame : MonoBehaviour {
@@ -11,7 +12,7 @@ public class loadGame : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if (Input.GetKeyDown(KeyCode.Space)) {
-			Application.LoadLevel("EaganTest2");
+            SceneManager.LoadScene("EaganTest2");
 		}
 	
 	}
