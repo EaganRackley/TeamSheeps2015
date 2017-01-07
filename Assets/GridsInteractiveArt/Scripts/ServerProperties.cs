@@ -19,7 +19,7 @@ public class ServerProperties : NetworkBehaviour {
     [Command]
     public void CmdAddServerElement(string guid)
     {
-        ElementProperty newProperty = new ElementProperty(guid, true, 0, isServer);
+        ElementProperty newProperty = new ElementProperty(guid, 0);
         Elements.Add(newProperty);
     }
 
@@ -31,7 +31,6 @@ public class ServerProperties : NetworkBehaviour {
             ElementProperty element = Elements[index];
             if (element.ID.Equals(guid))
             { 
-                element.isVisible = !element.isVisible;
                 Elements[index] = element;
             }
         }
