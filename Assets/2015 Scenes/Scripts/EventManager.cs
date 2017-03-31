@@ -32,9 +32,13 @@ public class EventManager : MonoBehaviour
 
     public List<TimedEvent> eventList;
 
-    void Awake()
+    void Start()
     {
         this.eventList = new List<TimedEvent>();
+    }
+
+    void Awake()
+    {
         this.topLeft = GameObject.FindGameObjectWithTag("TopLeft").transform;
         this.bottomRight = GameObject.FindGameObjectWithTag("BottomRight").transform;
 
@@ -107,6 +111,12 @@ public class EventManager : MonoBehaviour
 
     void Update()
     {
+        if (eventList == null)
+        {
+            print("EVENT LIST IS NULL OMGZ!");
+            return;
+        }
+
         for (int i = eventList.Count - 1; i >= 0; i--)
         {
             if (eventList[i].triggerTime <= this.gameTime)
