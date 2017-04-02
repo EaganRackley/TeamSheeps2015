@@ -17,6 +17,8 @@ public class PlayerController : MonoBehaviour
     public delegate IEnumerator PlayerPowerup(PlayerController player);
     // Movement amount (for all movement directions).
     public float speed;
+    // Controller number defines which controller the player is to use if keyboard controls aren't used.
+    public string playerPrefix = "P1";
     // Default direction is North.
     public FacingDirection currentDirection = FacingDirection.N;
 
@@ -49,6 +51,13 @@ public class PlayerController : MonoBehaviour
     {
         m_Animator = GetComponent<Animator>();
 		isGrounded = true;
+
+        var names = Input.GetJoystickNames();
+        Debug.Log("Connected Joysticks:");
+        for (int i = 0; i < names.Length; i++)
+        {
+            Debug.Log("Joystick" + (i + 1) + " = " + names[i]);
+        }
     }
 
     // Called on load.
@@ -128,11 +137,13 @@ public class PlayerController : MonoBehaviour
 
 	float UpdateXVelocity (float velocity_x)
 	{
-		if (Input.GetKey (leftKey)) {
+        float hAxis = Input.GetAxis(playerPrefix + "Horizontal");
+        //print(playerPrefix + "Horizontal: " + hAxis.ToString());
+        if (Input.GetKey (leftKey) || (hAxis < 0)) {
 			velocity_x -= speed;
 			this.currentDirection = FacingDirection.W;
 		}
-		else if (Input.GetKey (rightKey)) {
+		else if (Input.GetKey (rightKey) || (hAxis > 0)) {
 				velocity_x += speed;
 				this.currentDirection = FacingDirection.E;
 		}
@@ -141,12 +152,14 @@ public class PlayerController : MonoBehaviour
 
 	float UpdateYVelocity (float velocity_y)
 	{
-		if (Input.GetKey (upKey)) {
+        float vAxis = Input.GetAxis(playerPrefix + "Vertical");
+        //print(playerPrefix + "Vertical: " + vAxis.ToString());
+        if (Input.GetKey (upKey) || (vAxis > 0)) {
 			velocity_y += speed;
 			this.currentDirection = FacingDirection.N;
 		}
 		else
-		if (Input.GetKey (downKey)) {
+		if (Input.GetKey (downKey) || (vAxis < 0)) {
 			velocity_y -= speed;
 			this.currentDirection = FacingDirection.S;
 		}
