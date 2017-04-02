@@ -51,7 +51,11 @@ public class SickPlayer : MonoBehaviour {
         {
             // Timer's run out, so decrease speed and reset timer.
             this.speedDecreaseTimer = DECREASE_SPEED_EVERY;
-            playerComponent.speed -= SPEED_DECREASE_DELTA;
+            if(playerComponent.speed > 0.05f)
+            {
+                playerComponent.speed -= SPEED_DECREASE_DELTA;
+            }
+            
         }
         if (!InCameraView())
         {
