@@ -34,6 +34,14 @@ public class sound : MonoBehaviour {
 		//todo: when players are together play this music here
 	}
 
+    public void fadeMusic()
+    {
+        if(m_maxSoundVolume > 0 )
+        {
+            m_maxSoundVolume = Mathf.Lerp(m_maxSoundVolume, 0, 10.0f * Time.deltaTime);
+        }
+    }
+
 	public void increaseVolume(float maxSoundVolume) {
 		m_maxSoundVolume = maxSoundVolume;
 		m_hearingSound = true;
