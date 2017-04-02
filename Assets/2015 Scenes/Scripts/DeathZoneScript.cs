@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 using System.Collections;
 
 public class DeathZoneScript : MonoBehaviour {
@@ -31,7 +32,7 @@ public class DeathZoneScript : MonoBehaviour {
 	// Fades out the main theme
 	bool HandleMusicFade()
 	{
-		if(!DeathThemeTogether.GetComponent<AudioSource>().isPlaying) {            
+		if(!DeathThemeTogether.GetComponent<AudioSource>().isPlaying && !m_EndingSongPlayed) {            
             DeathThemeTogether.GetComponent<AudioSource>().PlayOneShot(DeathThemeTogether.clip);
 			m_EndingSongPlayed = true;
 		}
@@ -97,7 +98,7 @@ public class DeathZoneScript : MonoBehaviour {
 		if (m_EndingTriggered == true) 
 		{	
 			if (!DeathThemeTogether.GetComponent<AudioSource>().isPlaying && m_EndingSongPlayed == true) {
-				Application.LoadLevel("SplashScreen");
+				SceneManager.LoadScene("SplashScreen");
 			}
 			// Fade out primary music
 			HandleMusicFade();

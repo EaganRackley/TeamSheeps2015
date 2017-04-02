@@ -37,7 +37,11 @@ public class LoadGame : MonoBehaviour {
         if (Input.anyKeyDown && !isLoadingNewScene)
         {
             isLoadingNewScene = true;
-            FindObjectOfType<FadeFromWhite>().Show();
+            var fadeObjects = FindObjectsOfType<FadeFromWhite>();
+            foreach(FadeFromWhite fade in fadeObjects)
+            {
+                fade.Show();
+            }
             //StartCoroutine("LoadLevelAsync");
         }
         if(isLoadingNewScene)
