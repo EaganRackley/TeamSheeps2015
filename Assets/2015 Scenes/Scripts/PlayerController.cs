@@ -193,23 +193,34 @@ public class PlayerController : MonoBehaviour
         float velocity_y = 0f;
 		float velocity_z = 0f;
 
-        // Set y component of velocity.
-		velocity_y = UpdateYVelocity(velocity_y);
+        if(this.transform.position.z < -0.5f)
+        {
+            // Set y component of velocity.
+            velocity_y = UpdateYVelocity(velocity_y);
 
-        // Set x component of velocity.
-        velocity_x = UpdateXVelocity(velocity_x);
+            // Set x component of velocity.
+            velocity_x = UpdateXVelocity(velocity_x);
+            
+            // Change the facing direction according to current velocity direction.
+            UpdateFacingDirection(velocity_x, velocity_y);
 
-		// Change the facing direction according to current velocity direction.
-		UpdateFacingDirection(velocity_x, velocity_y);
+            // Handle jumping behavior when user presses jumpKey
+            //velocity_z = HandlePlayerJumping(this.body.velocity.z);
 
-		// Handle jumping behavior when user presses jumpKey
-		velocity_z = HandlePlayerJumping(this.body.velocity.z);
+            // Set a new velocity normalized based on speed.
+            Vector3 newVelocity = new Vector3(velocity_x, velocity_y, this.body.velocity.z).normalized * this.speed;
+            newVelocity.z = this.body.velocity.z;
+            //this.body.velocity += new Vector3(0f, 0f, velocity_z);
+            this.body.velocity = newVelocity;
+        }
+        else
+        {
+            float newZ = this.body.velocity.z + 10f * Time.deltaTime;
+            this.body.velocity = new Vector3(0f, 0f, newZ);
+            m_Animator.SetBool("IsMoving", true);
+        }
 
-        // Set a new velocity normalized based on speed.
-        this.body.velocity = new Vector3(velocity_x, velocity_y, 0f).normalized * this.speed;
-		this.body.velocity += new Vector3(0f, 0f, velocity_z);
-
-		// Apply the new velocity to our animations
+        // Apply the new velocity to our animations
         UpdatePlayerAnimations ();
 
         // Apply our current direction to the player rotation

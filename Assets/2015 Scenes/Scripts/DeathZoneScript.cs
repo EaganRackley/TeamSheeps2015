@@ -32,7 +32,8 @@ public class DeathZoneScript : MonoBehaviour {
 	bool HandleMusicFade()
 	{
 		if(!DeathThemeTogether.GetComponent<AudioSource>().isPlaying) {
-			DeathThemeTogether.GetComponent<AudioSource>().Play ();
+            
+            DeathThemeTogether.GetComponent<AudioSource>().PlayOneShot(DeathThemeTogether.clip);
 			m_EndingSongPlayed = true;
 		}
 

@@ -44,16 +44,19 @@ public class SpeedPowerup : AbstractPowerup
 	
 	void Update()
 	{
-		Vector3 pos = this.transform.position;
-		Vector3 fallFrom = new Vector3(pos.x, pos.y, fallFromZ);
-		Vector3 fallTo = new Vector3(pos.x, pos.y, stopAtZ);
-		pos = Vector3.Lerp(fallFrom, fallTo, timeFalling);
-		this.transform.position = pos;
-		if(timeFalling < 1.0f )
-		{
-			timeFalling += Time.deltaTime / fallModifier;
-			this.transform.Rotate(new Vector3(0.0f, 0.0f, timeFalling * 5.0f));
-		}
-	}
+        if(GetComponent<Rigidbody>().isKinematic == true)
+        {
+		    Vector3 pos = this.transform.position;
+		    Vector3 fallFrom = new Vector3(pos.x, pos.y, fallFromZ);
+		    Vector3 fallTo = new Vector3(pos.x, pos.y, stopAtZ);
+		    pos = Vector3.Lerp(fallFrom, fallTo, timeFalling);
+		    this.transform.position = pos;
+		    if(timeFalling < 1.0f )
+		    {
+		    	timeFalling += Time.deltaTime / fallModifier;
+		    	this.transform.Rotate(new Vector3(0.0f, 0.0f, timeFalling * 5.0f));
+		    }
+        }
+    }
 
 }
