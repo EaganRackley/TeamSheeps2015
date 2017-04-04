@@ -36,10 +36,7 @@ public class sound : MonoBehaviour {
 
     public void fadeMusic()
     {
-        if(m_maxSoundVolume > 0 )
-        {
-            m_maxSoundVolume = Mathf.Lerp(m_maxSoundVolume, 0, 10.0f * Time.deltaTime);
-        }
+        m_hearingSound = false;
     }
 
 	public void increaseVolume(float maxSoundVolume) {

@@ -1,6 +1,6 @@
 using UnityEngine;
 using System.Collections;
-
+using UnityEngine.SceneManagement;
 public class PlayerController : MonoBehaviour
 {
     // Enum for directions the player is facing.
@@ -204,6 +204,12 @@ public class PlayerController : MonoBehaviour
             // Change the facing direction according to current velocity direction.
             UpdateFacingDirection(velocity_x, velocity_y);
 
+            // Handle a scene reset if the player requests it
+            if(Input.GetKeyDown(KeyCode.R))
+            {
+                SceneManager.LoadScene("SplashScreen");
+            }            
+
             // Handle jumping behavior when user presses jumpKey
             //velocity_z = HandlePlayerJumping(this.body.velocity.z);
 
@@ -215,8 +221,9 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            float newZ = this.body.velocity.z + 10f * Time.deltaTime;
-            this.body.velocity = new Vector3(0f, 0f, newZ);
+            Vector3 pos = this.body.transform.position;
+            pos.z = Mathf.Lerp(pos.z, 6.0f, Time.deltaTime / 2f);
+            this.body.transform.position = pos;
             m_Animator.SetBool("IsMoving", true);
         }
 

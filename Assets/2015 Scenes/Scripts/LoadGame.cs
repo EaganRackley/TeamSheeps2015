@@ -46,13 +46,12 @@ public class LoadGame : MonoBehaviour {
         }
         if(isLoadingNewScene)
         {
+            music.fadeMusic();
             myLoadingTimer += Time.deltaTime;
             if(myLoadingTimer > 3f)
             {
                 SceneManager.LoadScene("Demo2017");
             }
-            music.fadeMusic();
-
         }
     }
 
