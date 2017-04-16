@@ -34,7 +34,7 @@ public class EventManager : MonoBehaviour
 
     void Start()
     {
-        this.eventList = new List<TimedEvent>();
+        eventList = new List<TimedEvent>();
     }
 
     void Awake()
@@ -62,10 +62,15 @@ public class EventManager : MonoBehaviour
 
     void AddEvent(EventFunction eventFunction, float eventTime)
     {
+        if (eventList == null)
+        {
+            print("EVENT LIST IS NULL OMGZ!");
+            return;
+        }
         TimedEvent newEvent = new TimedEvent();
         newEvent.eventFunction = eventFunction;
         newEvent.triggerTime = eventTime;
-        this.eventList.Add(newEvent);
+        eventList.Add(newEvent);
     }
 
     void SpawnTwentyFireflies()

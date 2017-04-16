@@ -170,7 +170,7 @@ public class PlayerController : MonoBehaviour
 	{
 		if( Input.GetKey(jumpKey) )
 		{
-			if(isGrounded = true)
+			if(isGrounded == true)
 			{
 				velocity_z -= speed * 4;
 				isGrounded = false;
@@ -191,7 +191,7 @@ public class PlayerController : MonoBehaviour
         // If no buttons are pressed, velocity is 0.
         float velocity_x = 0f;
         float velocity_y = 0f;
-		float velocity_z = 0f;
+/*		float velocity_z = 0f;*/
 
         if(this.transform.position.z < -0.5f)
         {
