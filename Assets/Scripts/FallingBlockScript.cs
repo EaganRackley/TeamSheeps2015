@@ -46,7 +46,7 @@ public class FallingBlockScript : MonoBehaviour
     // Creates a rumbling/shaking effect
     void Shake()
     {
-        Vector3 shakePosition = m_StartPosition;
+        Vector3 shakePosition = this.transform.position;
         shakePosition.x += Random.Range(0.0f, m_CurrentShakeMag) - m_CurrentShakeMag / 2.0f;
         shakePosition.y += Random.Range(0.0f, m_CurrentShakeMag) - m_CurrentShakeMag / 2.0f;
 
