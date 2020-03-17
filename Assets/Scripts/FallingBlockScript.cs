@@ -9,7 +9,7 @@ public class FallingBlockScript : MonoBehaviour
     public float MinShakeMagnitude = 0.01f;
     public float MaxShakeMagnitude = 0.1f;
     private float m_maxFallOffset = 5.0f;
-    public float FallTimeStart = 60.0f;
+    private float m_fallTimeStart = 180.0f;
 
     private float m_LifeSpent = 0.0f;
     private float m_CurrentShakeMag = 0.0f;
@@ -26,12 +26,12 @@ public class FallingBlockScript : MonoBehaviour
 
         if (worldPosition.x <= 0)
         {
-            m_lifetime = FallTimeStart - (-worldPosition.x * FallTimeMultiplier);
+            m_lifetime = m_fallTimeStart - (-worldPosition.x * FallTimeMultiplier);
             m_destroyAfter = m_lifetime + 10;
         }
         else if (worldPosition.x > 0)
         {
-            m_lifetime = FallTimeStart - (worldPosition.x * FallTimeMultiplier);
+            m_lifetime = m_fallTimeStart - (worldPosition.x * FallTimeMultiplier);
             m_destroyAfter = m_lifetime + 10;
         }
 

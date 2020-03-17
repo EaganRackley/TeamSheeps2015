@@ -13,7 +13,7 @@ public class ZippyMover : MonoBehaviour {
 	
 	float turningTimer;
 	
-	const float UPDOWN_RANGE = 0.5f;
+	public float UpDownRange = 0.5f;
 	const float SECONDS_PER_CYCLE = 5f;
 	float updownTimer;
 	float initialHeight;
@@ -40,7 +40,7 @@ public class ZippyMover : MonoBehaviour {
 		updownTimer += Time.deltaTime * (1f / SECONDS_PER_CYCLE);
 		if (updownTimer > 1f)
 			updownTimer -= 1f;
-		transform.position = new Vector3(transform.position.x, transform.position.y, initialHeight + Mathf.Sin(updownTimer * 2 * Mathf.PI) * UPDOWN_RANGE);
+		transform.position = new Vector3(transform.position.x, transform.position.y, initialHeight + Mathf.Sin(updownTimer * 2 * Mathf.PI) * UpDownRange);
 	}
 
 	void MoveAround()
