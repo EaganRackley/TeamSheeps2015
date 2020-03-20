@@ -3,6 +3,9 @@ using System.Collections;
 
 public class FallingBlockScript : MonoBehaviour
 {
+    public bool FadeInsteadOfFall = false;
+    public float FadeOffset = 0f; // Determines how much time before other objects fall that this object will fade.
+
     private float m_lifetime = 300.0f;
     private float m_destroyAfter = 310.0f;
     public float ShakeTime = 2.0f;
@@ -58,6 +61,19 @@ public class FallingBlockScript : MonoBehaviour
         this.transform.position = pos;
     }
 
+    
+    void FadeAlpha()
+    {
+        if(GetComponent<SpriteRenderer>() != null)
+        {
+            Color current = GetComponent<SpriteRenderer>().color;
+            if (current.a > 0f)
+                current.a -= Time.deltaTime;
+            GetComponent<SpriteRenderer>().color = current;
+        }
+        
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -71,19 +87,31 @@ public class FallingBlockScript : MonoBehaviour
         //    this.transform.position = pos;
         //}
 
-        if (m_LifeSpent > m_lifetime - ShakeTime)
+        if(FadeInsteadOfFall)
         {
-            Shake();
+            if(m_LifeSpent > m_lifetime - FadeOffset)
+            {
+                FadeAlpha();
+            }
+        }
+        else
+        {
+            if (m_LifeSpent > m_lifetime - ShakeTime)
+            {
+                Shake();
+            }
+
+            if (m_LifeSpent > m_lifetime)
+            {
+                this.GetComponent<Rigidbody>().isKinematic = false;
+                this.GetComponent<Rigidbody>().WakeUp();
+            }
+            if (m_LifeSpent > m_destroyAfter)
+            {
+                Destroy(this.gameObject);
+            }
         }
 
-        if (m_LifeSpent > m_lifetime)
-        {
-            this.GetComponent<Rigidbody>().isKinematic = false;
-            this.GetComponent<Rigidbody>().WakeUp();
-        }
-        if (m_LifeSpent > m_destroyAfter)
-        {
-            Destroy(this.gameObject);
-        }
+        
     }
 }

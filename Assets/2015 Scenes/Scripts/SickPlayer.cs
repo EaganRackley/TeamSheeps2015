@@ -18,14 +18,15 @@ public class SickPlayer : MonoBehaviour {
     // Use this for initialization
 	void Start () {
         this.playerComponent = GetComponent<PlayerController>();
-	}
+        this.playerComponent.speed = this.playerComponent.speed * 0.75f;
+    }
 
-	/// <summary>
-	/// Method triggers the prefabToSpawnOnDeath object to be instantiated randomly.
-	/// Used when sick player leaves camera space, @see Update() -> if(!InCameraView()).
-	/// and handles spawning the player deathshroud based at the player rotation
-	/// </summary>
-	void SpawnPrefabsOnDeath()
+    /// <summary>
+    /// Method triggers the prefabToSpawnOnDeath object to be instantiated randomly.
+    /// Used when sick player leaves camera space, @see Update() -> if(!InCameraView()).
+    /// and handles spawning the player deathshroud based at the player rotation
+    /// </summary>
+    void SpawnPrefabsOnDeath()
 	{
 		Instantiate(playerDeathShroud, this.transform.position, this.transform.rotation);
 

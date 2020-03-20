@@ -21,6 +21,7 @@ public class PlayerController : MonoBehaviour
     public string playerPrefix = "P1";
     // Default direction is North.
     public FacingDirection currentDirection = FacingDirection.N;
+    public GameObject HealingParticleEffect;
 
 
     // Direction keycodes; to be set in the scene editor.
@@ -47,8 +48,21 @@ public class PlayerController : MonoBehaviour
 	private Vector3 ROTATION_SOUTHWEST = new Vector3(0.0f, 0.0f, 315.0f);
 	private Vector3 ROTATION_NORTHWEST = new Vector3(0.0f, 0.0f, 225.0f);
 
+    private float m_startingSpeed;
+    public float StartingSpeed
+    {
+        get { return m_startingSpeed; }
+        set { m_startingSpeed = value; }
+    }
+
+    public ParticleSystem HealingParticles()
+    {
+        return HealingParticleEffect.GetComponent<ParticleSystem>();
+    }
+    
     void Start()
     {
+        StartingSpeed = speed;
         m_Animator = GetComponent<Animator>();
 		isGrounded = true;
 
