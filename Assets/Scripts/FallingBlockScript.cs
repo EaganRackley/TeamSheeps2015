@@ -103,8 +103,11 @@ public class FallingBlockScript : MonoBehaviour
 
             if (m_LifeSpent > m_lifetime)
             {
-                this.GetComponent<Rigidbody>().isKinematic = false;
-                this.GetComponent<Rigidbody>().WakeUp();
+                if(this.GetComponent<Rigidbody>() != null)
+                { 
+                    this.GetComponent<Rigidbody>().isKinematic = false;
+                    this.GetComponent<Rigidbody>().WakeUp();
+                }
             }
             if (m_LifeSpent > m_destroyAfter)
             {

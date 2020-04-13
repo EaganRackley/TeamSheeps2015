@@ -13,12 +13,14 @@ public class SickPlayer : MonoBehaviour {
 	public GameObject prefabToSpawnOnDeath;
 	// This prefab will spawn where the player was on death (matching player rotation at time of death)
 	public GameObject playerDeathShroud;
+    private float m_startingSpeed;
 
 
     // Use this for initialization
-	void Start () {
+    void Start () {
         this.playerComponent = GetComponent<PlayerController>();
         this.playerComponent.speed = this.playerComponent.speed * 0.75f;
+        m_startingSpeed = this.playerComponent.speed;
     }
 
     /// <summary>
@@ -56,7 +58,21 @@ public class SickPlayer : MonoBehaviour {
             {
                 playerComponent.speed -= SPEED_DECREASE_DELTA;
             }
-            
+
+            // Have our sick player sprite fade as it gets sicker and sicker.
+            if (playerComponent.speed <= m_startingSpeed)
+            {
+                Color col = GetComponent<SpriteRenderer>().color;
+                col.a = playerComponent.speed > 0f ? (playerComponent.speed / m_startingSpeed) : 0f;
+                GetComponent<SpriteRenderer>().color = col;
+            }
+
+            //if(playerComponent.speed <= 2f)
+            //{
+            //    Color col = GetComponent<SpriteRenderer>().color;
+            //    col.a = playerComponent.speed > 0f ? playerComponent.speed : 0f;
+            //    GetComponent<SpriteRenderer>().color = col;
+            //}
         }
         if (!InCameraView())
         {
