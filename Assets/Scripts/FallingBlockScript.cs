@@ -4,7 +4,12 @@ using System.Collections;
 public class FallingBlockScript : MonoBehaviour
 {
     public bool FadeInsteadOfFall = false;
+    public bool FadeAndFall = false;
     public float FadeOffset = 0f; // Determines how much time before other objects fall that this object will fade.
+    public bool AllowExtraLife = false;
+    public float ExtraLifeSpan = 20f;
+
+    private bool m_ExtraLifeGiven = false;
 
     private float m_lifetime = 300.0f;
     private float m_destroyAfter = 310.0f;
@@ -12,7 +17,7 @@ public class FallingBlockScript : MonoBehaviour
     public float MinShakeMagnitude = 0.01f;
     public float MaxShakeMagnitude = 0.1f;
     private float m_maxFallOffset = 5.0f;
-    private float m_fallTimeStart = 100.0f;
+    private float m_fallTimeStart = 180.0f; //180f
 
     private float m_LifeSpent = 0.0f;
     private float m_CurrentShakeMag = 0.0f;
@@ -46,6 +51,18 @@ public class FallingBlockScript : MonoBehaviour
         m_StartPosition = this.transform.position;
     }
 
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (AllowExtraLife && collision.gameObject.tag == "Player2")
+        {
+            if(m_ExtraLifeGiven == false)
+            {
+                m_ExtraLifeGiven = true;
+                m_LifeSpent -= ExtraLifeSpan;
+            }
+        }
+    }
+
     // Creates a rumbling/shaking effect
     void Shake()
     {
@@ -64,6 +81,7 @@ public class FallingBlockScript : MonoBehaviour
     
     void FadeAlpha()
     {
+        // Fade our sprite
         if(GetComponent<SpriteRenderer>() != null)
         {
             Color current = GetComponent<SpriteRenderer>().color;
@@ -71,7 +89,18 @@ public class FallingBlockScript : MonoBehaviour
                 current.a -= Time.deltaTime;
             GetComponent<SpriteRenderer>().color = current;
         }
-        
+        // Fade all child sprites too
+        SpriteRenderer[] srList = GetComponentsInChildren<SpriteRenderer>();
+        foreach (SpriteRenderer sr in srList)
+        {
+            if (sr != null)
+            {
+                Color current = sr.color;
+                if (current.a > 0f)
+                    current.a -= Time.deltaTime / 4;
+                sr.color = current;
+            }
+        }
     }
 
     // Update is called once per frame
@@ -87,7 +116,23 @@ public class FallingBlockScript : MonoBehaviour
         //    this.transform.position = pos;
         //}
 
-        if(FadeInsteadOfFall)
+        // Trigger a particle effect if this tile was given extra life
+        if(AllowExtraLife && m_ExtraLifeGiven)
+        {
+            if (m_LifeSpent + ExtraLifeSpan > m_lifetime - FadeOffset && GetComponent<Rigidbody>().isKinematic)
+            {
+
+                if (!GetComponentInChildren<ParticleSystem>().isPlaying)
+                    GetComponentInChildren<ParticleSystem>().Play();
+            }
+            else if(!GetComponent<Rigidbody>().isKinematic)
+            {
+                if (GetComponentInChildren<ParticleSystem>().isPlaying)
+                    GetComponentInChildren<ParticleSystem>().Stop();
+            }
+        }
+
+        if(FadeInsteadOfFall )
         {
             if(m_LifeSpent > m_lifetime - FadeOffset)
             {
@@ -96,6 +141,11 @@ public class FallingBlockScript : MonoBehaviour
         }
         else
         {
+            if (FadeAndFall && m_LifeSpent > m_lifetime - FadeOffset)
+            {
+                FadeAlpha();
+            }
+
             if (m_LifeSpent > m_lifetime - ShakeTime)
             {
                 Shake();
