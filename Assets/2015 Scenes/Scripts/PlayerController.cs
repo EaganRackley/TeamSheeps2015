@@ -17,6 +17,8 @@ public class PlayerController : MonoBehaviour
     public delegate IEnumerator PlayerPowerup(PlayerController player);
     // Movement amount (for all movement directions).
     public float speed;
+    public bool Following;
+    public Transform TransformToFollow;
     // Controller number defines which controller the player is to use if keyboard controls aren't used.
     public string playerPrefix = "P1";
     // Default direction is North.
@@ -180,6 +182,40 @@ public class PlayerController : MonoBehaviour
 		return velocity_y;
 	}
 
+    float UpdateXVelocity(float velocity_x, Transform transformToFollow)
+    {
+        //print(playerPrefix + "Horizontal: " + hAxis.ToString());
+
+
+        if ((int)this.transform.position.x > (int)transformToFollow.position.x) // Transform is to the left
+        {
+            velocity_x -= speed;
+            this.currentDirection = FacingDirection.W;
+        }
+        if ((int)this.transform.position.x < (int)transformToFollow.position.x) // Transform is to the right
+        {
+            velocity_x += speed;
+            this.currentDirection = FacingDirection.E;
+        }
+
+        return velocity_x;
+    }
+
+    float UpdateYVelocity(float velocity_y, Transform transformToFollow)
+    {
+        if ((int)this.transform.position.y < (int)transformToFollow.position.y) // Transform is to the below
+        {
+            velocity_y += speed;
+            this.currentDirection = FacingDirection.N;
+        }
+        else if ((int)this.transform.position.y > (int)transformToFollow.position.y) // Transform is to the above
+        {
+            velocity_y -= speed;
+            this.currentDirection = FacingDirection.S;
+        }
+        return velocity_y;
+    }
+
     float HandlePlayerJumping(float velocity_z)
 	{
 		if( Input.GetKey(jumpKey) )
@@ -209,12 +245,23 @@ public class PlayerController : MonoBehaviour
 
         if(this.transform.position.z < -0.5f)
         {
-            // Set y component of velocity.
-            velocity_y = UpdateYVelocity(velocity_y);
+            if(!Following)
+            {
+                // Set y component of velocity.
+                velocity_y = UpdateYVelocity(velocity_y);
 
-            // Set x component of velocity.
-            velocity_x = UpdateXVelocity(velocity_x);
-            
+                // Set x component of velocity.
+                velocity_x = UpdateXVelocity(velocity_x);
+            }
+            else
+            {
+                // Set y component of velocity based on transform to follow.
+                velocity_y = UpdateYVelocity(velocity_y, TransformToFollow);
+
+                // Set x component of velocity based on transform to follow.
+                velocity_x = UpdateXVelocity(velocity_x, TransformToFollow);
+            }
+
             // Change the facing direction according to current velocity direction.
             UpdateFacingDirection(velocity_x, velocity_y);
 
