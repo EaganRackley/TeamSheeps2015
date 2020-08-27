@@ -3,7 +3,7 @@ using System.Collections;
 
 public class SpeedPowerup : AbstractPowerup
 {
-    public float speedIncrease = 500f;
+    public float speedIncrease = 2f;
     public float powerupDuration = 5f;
 
 	public float fallFromZ = -10.0f;

@@ -14,10 +14,14 @@ public class SickPlayer : MonoBehaviour {
 	// This prefab will spawn where the player was on death (matching player rotation at time of death)
 	public GameObject playerDeathShroud;
     private float m_startingSpeed;
+    private int m_offScreenCount;
+    private float m_debounceOffscreenTimer;
 
 
     // Use this for initialization
     void Start () {
+        m_offScreenCount = 0;
+        m_debounceOffscreenTimer = 0f;
         this.playerComponent = GetComponent<PlayerController>();
         this.playerComponent.speed = this.playerComponent.speed * 0.75f;
         m_startingSpeed = this.playerComponent.speed;
@@ -76,10 +80,26 @@ public class SickPlayer : MonoBehaviour {
         }
         if (!InCameraView())
         {
-			SpawnPrefabsOnDeath();
-			Destroy(this.gameObject);
+            if (!playerComponent.Following && m_offScreenCount < 3)
+            {
+                playerComponent.GetPowerup(this.PowerupFunction);
+                m_offScreenCount++;
+            }
+            else if(!playerComponent.Following && m_offScreenCount >= 3)
+            { 
+                SpawnPrefabsOnDeath();
+                Destroy(this.gameObject);
+            }
         }
 	}
+    public IEnumerator PowerupFunction(PlayerController player)
+    {
+        player.Following = true;
+        player.speed += 1f;
+        yield return new WaitForSeconds(3f);
+        player.speed -= 1f;
+        player.Following = false;
+    }
 
     bool InCameraView()
     {

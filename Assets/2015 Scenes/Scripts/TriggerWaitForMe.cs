@@ -19,9 +19,14 @@ public class TriggerWaitForMe : MonoBehaviour
         if(other.gameObject.tag == "Player" && !m_triggered)
         {
             m_triggered = true;
+            HavePlayer2FollowPlayer1();
+        }
+    }
+
+    public void HavePlayer2FollowPlayer1()
+    {
             player2.Following = true;
             m_totalFollowTime = FollowTime;
-        }
     }
 
     // Update is called once per frame
