@@ -5,7 +5,7 @@ using UnityEngine;
 public class TriggerWaitForMe : MonoBehaviour
 {
     public PlayerController player2;
-    private float m_totalFollowTime = 4f;
+    private float m_totalFollowTime = 3f;
     private bool m_triggered = false;
     public float FollowTime = 4f;
     // Start is called before the first frame update

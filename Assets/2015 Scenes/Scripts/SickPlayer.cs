@@ -34,15 +34,15 @@ public class SickPlayer : MonoBehaviour {
     /// </summary>
     void SpawnPrefabsOnDeath()
 	{
-		Instantiate(playerDeathShroud, this.transform.position, this.transform.rotation);
+		Instantiate(playerDeathShroud, new Vector3(this.transform.position.x, this.transform.position.y, -0.52f), this.transform.rotation);
 
 		Vector3 pos = this.transform.position;
 
-		for(int i = 0; i < 10; i++)
+		for(int i = 0; i < 3; i++)
 		{
-			Vector3 spawnPosition = new Vector3(Random.Range(pos.x-0.27f, pos.x+0.27f),
-		                                    Random.Range(pos.y-0.27f, pos.y+0.27f),
-			                                pos.z - Random.Range(0.8f, 1.25f));
+            Vector3 spawnPosition = new Vector3(Random.Range(pos.x - 0.27f, pos.x + 0.27f),
+                                            Random.Range(pos.y - 0.27f, pos.y + 0.27f),
+                                            pos.z - Random.Range(0.8f, 1.25f));
 			Instantiate(prefabToSpawnOnDeath, spawnPosition, Quaternion.identity);
 		}
 	}
@@ -85,7 +85,7 @@ public class SickPlayer : MonoBehaviour {
                 playerComponent.GetPowerup(this.PowerupFunction);
                 m_offScreenCount++;
             }
-            else if(!playerComponent.Following && m_offScreenCount >= 3)
+            else if(!playerComponent.Following && m_offScreenCount >= 1)
             { 
                 SpawnPrefabsOnDeath();
                 Destroy(this.gameObject);
@@ -96,7 +96,7 @@ public class SickPlayer : MonoBehaviour {
     {
         player.Following = true;
         player.speed += 1f;
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(5f);
         player.speed -= 1f;
         player.Following = false;
     }

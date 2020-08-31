@@ -53,7 +53,7 @@ public class WaitForMeFollow : MonoBehaviour
                 m_renderer.material.color = AdjustColorAlpha(m_renderer.material.color, 0.5f);
             }
         }
-
-        this.transform.position = PlayerToFollow.transform.position - Offset;
+        if(PlayerToFollow != null)
+            this.transform.position = PlayerToFollow.transform.position - Offset;
     }
 }

@@ -6,6 +6,7 @@ public class Firefly : MonoBehaviour {
     public float onTime;
     public float offTime;
     public float randomVariance;
+    private float m_maxIntensity;
 
     float lightCountdown;
     bool lightOn;
@@ -15,6 +16,7 @@ public class Firefly : MonoBehaviour {
     void Awake()
     {
         fireflyLight = GetComponentInChildren<Light>();
+        m_maxIntensity = fireflyLight.intensity;
     }
 
     void Start()
@@ -53,8 +55,13 @@ public class Firefly : MonoBehaviour {
     void UpdateLight()
     {
         if (this.lightOn)
-            fireflyLight.enabled = true;
+        {
+            fireflyLight.intensity = Mathf.Lerp(0f, m_maxIntensity, onTime/2f);
+        }
         else
-            fireflyLight.enabled = false;
+        {
+            fireflyLight.intensity = Mathf.Lerp(m_maxIntensity, 0f, onTime / 2f);
+        }
+            
     }
 }
