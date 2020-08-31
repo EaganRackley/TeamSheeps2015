@@ -16,10 +16,12 @@ public class SickPlayer : MonoBehaviour {
     private float m_startingSpeed;
     private int m_offScreenCount;
     private float m_debounceOffscreenTimer;
+    private bool m_isDying;
 
 
     // Use this for initialization
     void Start () {
+        m_isDying = false;
         m_offScreenCount = 0;
         m_debounceOffscreenTimer = 0f;
         this.playerComponent = GetComponent<PlayerController>();
@@ -34,11 +36,11 @@ public class SickPlayer : MonoBehaviour {
     /// </summary>
     void SpawnPrefabsOnDeath()
 	{
-		Instantiate(playerDeathShroud, new Vector3(this.transform.position.x, this.transform.position.y, -0.52f), this.transform.rotation);
+		Instantiate(playerDeathShroud, new Vector3(this.transform.position.x, this.transform.position.y, this.transform.position.z), this.transform.rotation);
 
 		Vector3 pos = this.transform.position;
 
-		for(int i = 0; i < 3; i++)
+		for(int i = 0; i < 2; i++)
 		{
             Vector3 spawnPosition = new Vector3(Random.Range(pos.x - 0.27f, pos.x + 0.27f),
                                             Random.Range(pos.y - 0.27f, pos.y + 0.27f),
@@ -49,6 +51,10 @@ public class SickPlayer : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+
+        if (m_isDying)
+            HandleDying();
+
         if (speedDecreaseTimer > 0)
         {
             // Time.deltaTime returns time elapsed since last frame drawn.
@@ -64,11 +70,15 @@ public class SickPlayer : MonoBehaviour {
             }
 
             // Have our sick player sprite fade as it gets sicker and sicker.
-            if (playerComponent.speed <= m_startingSpeed)
+            if (playerComponent.speed <= m_startingSpeed && !m_isDying)
             {
                 Color col = GetComponent<SpriteRenderer>().color;
                 col.a = playerComponent.speed > 0f ? (playerComponent.speed / m_startingSpeed) : 0f;
                 GetComponent<SpriteRenderer>().color = col;
+                if(col.a <= 0.05f)
+                {
+                    m_isDying = true;
+                }
             }
 
             //if(playerComponent.speed <= 2f)
@@ -80,18 +90,59 @@ public class SickPlayer : MonoBehaviour {
         }
         if (!InCameraView())
         {
-            if (!playerComponent.Following && m_offScreenCount < 3)
+            if (!playerComponent.Following && m_offScreenCount < 1)
             {
                 playerComponent.GetPowerup(this.PowerupFunction);
                 m_offScreenCount++;
             }
             else if(!playerComponent.Following && m_offScreenCount >= 1)
-            { 
-                SpawnPrefabsOnDeath();
-                Destroy(this.gameObject);
+            {
+                m_isDying = true;
             }
         }
 	}
+
+    void HandleDying()
+    {
+        
+        // Fade all child sprites too
+        bool allLightsOut = false;
+        int lightOutCount = 0;
+        Light[] lightList = GetComponentsInChildren<Light>();
+        if (lightList.Length > 0)
+        {
+            foreach (Light light in lightList)
+            {
+                if (light != null)
+                {
+                    light.intensity -= Time.deltaTime;
+                    if(light.intensity <= 0f)
+                    {
+                        lightOutCount++;
+                        if(lightOutCount >= lightList.Length)
+                        {
+                            allLightsOut = true;
+                        }
+                    }
+                }
+            }
+        }
+        else
+        {
+            allLightsOut = true;
+        }
+
+        Color col = GetComponent<SpriteRenderer>().color;
+        col.a = col.a -= Time.deltaTime;
+        GetComponent<SpriteRenderer>().color = col;
+
+        if (allLightsOut && col.a <= 0f)
+        {
+            SpawnPrefabsOnDeath();
+            Destroy(this.gameObject);
+        }
+    }
+
     public IEnumerator PowerupFunction(PlayerController player)
     {
         player.Following = true;

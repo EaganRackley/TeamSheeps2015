@@ -8,6 +8,16 @@ public class EventManager : MonoBehaviour
 	
     float gameStartTime;
 
+    float m_lifeSpent;
+
+    public float lifeSpent
+    {
+        get
+        {
+            return m_lifeSpent;
+        }
+    }
+
     public float gameTime
     {
         get
@@ -116,6 +126,8 @@ public class EventManager : MonoBehaviour
 
     void Update()
     {
+        m_lifeSpent += Time.deltaTime;
+
         if (eventList == null)
         {
             print("EVENT LIST IS NULL OMGZ!");

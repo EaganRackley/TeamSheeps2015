@@ -17,17 +17,21 @@ public class FallingBlockScript : MonoBehaviour
     public float MinShakeMagnitude = 0.01f;
     public float MaxShakeMagnitude = 0.1f;
     private float m_maxFallOffset = 5.0f;
-    private float m_fallTimeStart = 60.0f; //180f
+    private float m_fallTimeStart = 180.0f; //180f
 
     private float m_LifeSpent = 0.0f;
     private float m_CurrentShakeMag = 0.0f;
     private Vector3 m_StartPosition;
+
+    private EventManager m_eventManager;
 
     private const float FallTimeMultiplier = 1.9f;
 
     void Start()
     {
         m_LifeSpent = 0f;
+
+        m_eventManager = FindObjectOfType<EventManager>();
 
         // Set Lifetime and Destroy After based on X position
         Vector3 worldPosition = this.transform.position;
@@ -58,7 +62,7 @@ public class FallingBlockScript : MonoBehaviour
             if(m_ExtraLifeGiven == false)
             {
                 m_ExtraLifeGiven = true;
-                m_LifeSpent -= ExtraLifeSpan;
+                //m_LifeSpent -= ExtraLifeSpan;
             }
         }
     }
@@ -91,14 +95,17 @@ public class FallingBlockScript : MonoBehaviour
         }
         // Fade all child sprites too
         SpriteRenderer[] srList = GetComponentsInChildren<SpriteRenderer>();
-        foreach (SpriteRenderer sr in srList)
-        {
-            if (sr != null)
+        if(srList.Length > 0)
+        { 
+            foreach (SpriteRenderer sr in srList)
             {
-                Color current = sr.color;
-                if (current.a > 0f)
-                    current.a -= Time.deltaTime / 4;
-                sr.color = current;
+                if (sr != null)
+                {
+                    Color current = sr.color;
+                    if (current.a > 0f)
+                        current.a -= Time.deltaTime / 4;
+                    sr.color = current;
+                }
             }
         }
     }
@@ -106,7 +113,11 @@ public class FallingBlockScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        m_LifeSpent += Time.deltaTime;
+        m_LifeSpent = m_eventManager.lifeSpent;
+        if(m_ExtraLifeGiven)
+        {
+            m_LifeSpent -= ExtraLifeSpan;
+        }
 
         //// Esnure physics doesn't toss our tiles into the air
         //if (this.transform.position.z < 0f)
@@ -117,11 +128,10 @@ public class FallingBlockScript : MonoBehaviour
         //}
 
         // Trigger a particle effect if this tile was given extra life
-        if(AllowExtraLife && m_ExtraLifeGiven)
+        if (AllowExtraLife && m_ExtraLifeGiven)
         {
-            if (m_LifeSpent + ExtraLifeSpan > m_lifetime - FadeOffset && GetComponent<Rigidbody>().isKinematic)
+            if (m_LifeSpent + ExtraLifeSpan > m_lifetime - FadeOffset && GetComponent<Rigidbody>().isKinematic && GetComponentInChildren<ParticleSystem>() != null)
             {
-
                 if (!GetComponentInChildren<ParticleSystem>().isPlaying)
                     GetComponentInChildren<ParticleSystem>().Play();
             }
