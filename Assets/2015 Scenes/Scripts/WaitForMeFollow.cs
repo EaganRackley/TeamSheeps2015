@@ -38,7 +38,7 @@ public class WaitForMeFollow : MonoBehaviour
     void Update()
     {
         // If not following, fade graphic out (we will start there)
-        if (!PlayerToFollow.Following)
+        if (!PlayerToFollow.Following || !PlayerToFollow.ShowingDialog)
         {
             if (m_renderer.material.color.a > 0f)
             {

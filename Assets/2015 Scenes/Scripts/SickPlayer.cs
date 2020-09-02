@@ -146,10 +146,12 @@ public class SickPlayer : MonoBehaviour {
     public IEnumerator PowerupFunction(PlayerController player)
     {
         player.Following = true;
+        player.ShowingDialog = true;
         player.speed += 1f;
         yield return new WaitForSeconds(5f);
         player.speed -= 1f;
         player.Following = false;
+        player.ShowingDialog = false;
     }
 
     bool InCameraView()

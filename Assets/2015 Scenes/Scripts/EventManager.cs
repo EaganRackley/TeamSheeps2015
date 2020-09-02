@@ -130,7 +130,7 @@ public class EventManager : MonoBehaviour
 
         if (eventList == null)
         {
-            print("EVENT LIST IS NULL OMGZ!");
+            //print("EVENT LIST IS NULL OMGZ!");
             return;
         }
 

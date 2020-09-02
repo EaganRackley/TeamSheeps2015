@@ -25,8 +25,9 @@ public class TriggerWaitForMe : MonoBehaviour
 
     public void HavePlayer2FollowPlayer1()
     {
-            player2.Following = true;
-            m_totalFollowTime = FollowTime;
+        player2.Following = true;
+        player2.ShowingDialog = true;
+        m_totalFollowTime = FollowTime;
     }
 
     // Update is called once per frame
@@ -38,6 +39,7 @@ public class TriggerWaitForMe : MonoBehaviour
             if(m_totalFollowTime <= 0f)
             {
                 player2.Following = false;
+                player2.ShowingDialog = false;
                 GameObject.Destroy(this);
             }
         }

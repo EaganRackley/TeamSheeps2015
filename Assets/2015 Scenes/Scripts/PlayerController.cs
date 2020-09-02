@@ -18,12 +18,14 @@ public class PlayerController : MonoBehaviour
     // Movement amount (for all movement directions).
     public float speed;
     public bool Following;
+    public bool ShowingDialog;
     public Transform TransformToFollow;
     // Controller number defines which controller the player is to use if keyboard controls aren't used.
     public string playerPrefix = "P1";
     // Default direction is North.
     public FacingDirection currentDirection = FacingDirection.N;
     public GameObject HealingParticleEffect;
+    private EventManager m_eventManager;
 
 
     // Direction keycodes; to be set in the scene editor.
@@ -50,6 +52,12 @@ public class PlayerController : MonoBehaviour
 	private Vector3 ROTATION_SOUTHWEST = new Vector3(0.0f, 0.0f, 315.0f);
 	private Vector3 ROTATION_NORTHWEST = new Vector3(0.0f, 0.0f, 225.0f);
 
+    struct DemoMovment
+    {
+        float TimeOffset;
+
+    }
+
     private float m_startingSpeed;
     public float StartingSpeed
     {
@@ -64,15 +72,16 @@ public class PlayerController : MonoBehaviour
     
     void Start()
     {
+        ShowingDialog = false;
         StartingSpeed = speed;
         m_Animator = GetComponent<Animator>();
 		isGrounded = true;
-
+        m_eventManager = FindObjectOfType<EventManager>();
         var names = Input.GetJoystickNames();
-        Debug.Log("Connected Joysticks:");
+        //Debug.Log("Connected Joysticks:");
         for (int i = 0; i < names.Length; i++)
         {
-            Debug.Log("Joystick" + (i + 1) + " = " + names[i]);
+            //Debug.Log("Joystick" + (i + 1) + " = " + names[i]);
         }
     }
 
@@ -97,6 +106,7 @@ public class PlayerController : MonoBehaviour
 	// Change the facing direction according to current velocity direction.
 	void UpdateFacingDirection (float velocity_x, float velocity_y)
 	{
+        FacingDirection lastFacingDirection = this.currentDirection;
 		if (velocity_x > 0) {
 			if (velocity_y > 0) this.currentDirection = FacingDirection.NE;
 			if (velocity_y == 0) this.currentDirection = FacingDirection.E;
@@ -112,6 +122,11 @@ public class PlayerController : MonoBehaviour
 			if (velocity_y == 0) this.currentDirection = FacingDirection.W;
 			if (velocity_y < 0) this.currentDirection = FacingDirection.SW;
 		}
+        if(lastFacingDirection != this.currentDirection)
+        {
+            Debug.Log(playerPrefix + "Waypoints.Add(new Waypoint(" + m_eventManager.lifeSpent + "f, new Vector3("
+                + this.transform.position.x.ToString() + "f, " + this.transform.position.y.ToString() + "f, " + this.transform.position.z.ToString() + "f)));");
+        }
 	}
 
 	// Examines the current facing direction and sets rotation accordingly.
@@ -278,6 +293,11 @@ public class PlayerController : MonoBehaviour
             Vector3 newVelocity = new Vector3(velocity_x, velocity_y, this.body.velocity.z).normalized * this.speed;
             newVelocity.z = this.body.velocity.z;
             //this.body.velocity += new Vector3(0f, 0f, velocity_z);
+            if(this.body.velocity != newVelocity)
+            {
+                Debug.Log(playerPrefix + "Waypoints.Add(new Waypoint(" + m_eventManager.lifeSpent + "f, new Vector3("
+                + this.transform.position.x.ToString() + "f, " + this.transform.position.y.ToString() + "f, " + this.transform.position.z.ToString() + "f)));");
+            }
             this.body.velocity = newVelocity;
         }
         else
