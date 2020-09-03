@@ -83,6 +83,12 @@ public class PlayerController : MonoBehaviour
         {
             //Debug.Log("Joystick" + (i + 1) + " = " + names[i]);
         }
+        InvokeRepeating("OutputPosition", 1f, 1f);  //1s delay, repeat every 1s, debug output that we can then add as demo movement.
+    }
+    void OutputPosition()
+    {
+        Debug.Log(playerPrefix + "Waypoints.Add(new Waypoint(" + m_eventManager.lifeSpent + "f, new Vector3("
+            + this.transform.position.x.ToString() + "f, " + this.transform.position.y.ToString() + "f, " + this.transform.position.z.ToString() + "f)));");
     }
 
     // Called on load.
@@ -106,7 +112,7 @@ public class PlayerController : MonoBehaviour
 	// Change the facing direction according to current velocity direction.
 	void UpdateFacingDirection (float velocity_x, float velocity_y)
 	{
-        FacingDirection lastFacingDirection = this.currentDirection;
+        //FacingDirection lastFacingDirection = this.currentDirection;
 		if (velocity_x > 0) {
 			if (velocity_y > 0) this.currentDirection = FacingDirection.NE;
 			if (velocity_y == 0) this.currentDirection = FacingDirection.E;
@@ -122,11 +128,11 @@ public class PlayerController : MonoBehaviour
 			if (velocity_y == 0) this.currentDirection = FacingDirection.W;
 			if (velocity_y < 0) this.currentDirection = FacingDirection.SW;
 		}
-        if(lastFacingDirection != this.currentDirection)
-        {
-            Debug.Log(playerPrefix + "Waypoints.Add(new Waypoint(" + m_eventManager.lifeSpent + "f, new Vector3("
-                + this.transform.position.x.ToString() + "f, " + this.transform.position.y.ToString() + "f, " + this.transform.position.z.ToString() + "f)));");
-        }
+        //if(lastFacingDirection != this.currentDirection)
+        //{
+        //    Debug.Log(playerPrefix + "Waypoints.Add(new Waypoint(" + m_eventManager.lifeSpent + "f, new Vector3("
+        //        + this.transform.position.x.ToString() + "f, " + this.transform.position.y.ToString() + "f, " + this.transform.position.z.ToString() + "f)));");
+        //}
 	}
 
 	// Examines the current facing direction and sets rotation accordingly.
@@ -293,11 +299,11 @@ public class PlayerController : MonoBehaviour
             Vector3 newVelocity = new Vector3(velocity_x, velocity_y, this.body.velocity.z).normalized * this.speed;
             newVelocity.z = this.body.velocity.z;
             //this.body.velocity += new Vector3(0f, 0f, velocity_z);
-            if(this.body.velocity != newVelocity)
-            {
-                Debug.Log(playerPrefix + "Waypoints.Add(new Waypoint(" + m_eventManager.lifeSpent + "f, new Vector3("
-                + this.transform.position.x.ToString() + "f, " + this.transform.position.y.ToString() + "f, " + this.transform.position.z.ToString() + "f)));");
-            }
+            //if(this.body.velocity != newVelocity)
+            //{
+            //    Debug.Log(playerPrefix + "Waypoints.Add(new Waypoint(" + m_eventManager.lifeSpent + "f, new Vector3("
+            //    + this.transform.position.x.ToString() + "f, " + this.transform.position.y.ToString() + "f, " + this.transform.position.z.ToString() + "f)));");
+            //}
             this.body.velocity = newVelocity;
         }
         else
@@ -318,8 +324,8 @@ public class PlayerController : MonoBehaviour
 	// Called once per timestep.
 	void FixedUpdate()
 	{
-		
-	}
+
+    }
 
     public void GetPowerup(PlayerPowerup powerupFunction)
     {
