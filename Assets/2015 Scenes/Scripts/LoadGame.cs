@@ -50,7 +50,7 @@ public class LoadGame : MonoBehaviour {
             myLoadingTimer += Time.deltaTime;
             if(myLoadingTimer > 3f)
             {
-                SceneManager.LoadScene("Demo2017");
+                SceneManager.LoadScene("Cabinet2020");
             }
         }
     }
