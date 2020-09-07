@@ -32,7 +32,10 @@ public class LightLerper : MonoBehaviour {
     void Update()
     {
         if (currentColorIndex >= colorsList.Count)
-            return;
+        {
+            currentColorIndex = colorsList.Count - 1;
+        }
+
         timeTillNextColor -= Time.deltaTime;
         if (timeTillNextColor <= 0f)
         {

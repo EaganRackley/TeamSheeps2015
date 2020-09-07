@@ -26,6 +26,7 @@ public class PlayerController : MonoBehaviour
     public FacingDirection currentDirection = FacingDirection.N;
     public GameObject HealingParticleEffect;
     private EventManager m_eventManager;
+    public bool LogPosition = false;
 
 
     // Direction keycodes; to be set in the scene editor.
@@ -87,8 +88,11 @@ public class PlayerController : MonoBehaviour
     }
     void OutputPosition()
     {
-        Debug.Log(playerPrefix + "Waypoints.Add(new Waypoint(" + m_eventManager.lifeSpent + "f, new Vector3("
-            + this.transform.position.x.ToString() + "f, " + this.transform.position.y.ToString() + "f, " + this.transform.position.z.ToString() + "f)));");
+        if(LogPosition)
+        {
+            Debug.Log(playerPrefix + "Waypoints.Add(new Waypoint(" + m_eventManager.lifeSpent + "f, new Vector3("
+                + this.transform.position.x.ToString() + "f, " + this.transform.position.y.ToString() + "f, " + this.transform.position.z.ToString() + "f)));");
+        }
     }
 
     // Called on load.
