@@ -34,7 +34,7 @@ public class LoadGame : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
-        if (Input.anyKeyDown && !isLoadingNewScene)
+        if (Input.GetButton("Fire1") && !isLoadingNewScene)
         {
             isLoadingNewScene = true;
             var fadeObjects = FindObjectsOfType<FadeFromWhite>();
