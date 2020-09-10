@@ -35,9 +35,22 @@ public class TriggerSwitchCamera : MonoBehaviour
             {
                 Camera cam = m_camera.GetComponent<Camera>();
                 float currentFOV = cam.fieldOfView;
-                currentFOV = Mathf.Lerp(currentFOV, NewFOV, Time.deltaTime / FovSpeed);
+                //currentFOV = Mathf.Lerp(currentFOV, NewFOV, Time.deltaTime / FovSpeed);
+                currentFOV = Mathf.MoveTowards(currentFOV, NewFOV, Time.deltaTime * FovSpeed);
                 cam.fieldOfView = currentFOV;
             }
         }
+    }
+
+    public bool IsFinished()
+    {
+        Camera cam = m_camera.GetComponent<Camera>();
+        return (cam.fieldOfView == NewFOV);
+    }
+
+    public void Finish()
+    {
+        Camera cam = m_camera.GetComponent<Camera>();
+        cam.fieldOfView = NewFOV;
     }
 }
