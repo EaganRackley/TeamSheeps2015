@@ -80,7 +80,7 @@ public class LoadGame : MonoBehaviour {
             if (TransitionsAreFinished())
             {
                 myWaitForFinishedTimer += Time.deltaTime;
-                if(myWaitForFinishedTimer > 2f)
+                if(myWaitForFinishedTimer > 0.10f)
                 {
                     isLoadingNewScene = true;
                     var fadeObjects = FindObjectsOfType<FadeFromWhite>();

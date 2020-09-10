@@ -50,6 +50,7 @@ public class TriggerSwitchCamera : MonoBehaviour
 
     public void Finish()
     {
+        m_triggered = true;
         Camera cam = m_camera.GetComponent<Camera>();
         cam.fieldOfView = NewFOV;
     }

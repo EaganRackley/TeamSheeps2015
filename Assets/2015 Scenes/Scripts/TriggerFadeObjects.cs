@@ -6,6 +6,9 @@ using TMPro;
 public class TriggerFadeObjects : MonoBehaviour
 {
     private bool m_triggered;
+    public float StartDelay = 0f;
+    public bool Flash = false;
+    public float FlashTime = 2f;
     public bool FadeIn = true;
     public float FadeSpeed = 0.05f;
     public float TargetLightIntensity = 3.81f;
@@ -15,11 +18,13 @@ public class TriggerFadeObjects : MonoBehaviour
     public TextMeshPro TextObject;
     public float HideAfter = 0.0f;
     private float m_hideAfterTimer = 0.0f;
+    private float m_startTimer = 0.0f;
     
 
     // Start is called before the first frame update
     void Start()
     {
+        m_startTimer = 0f;
         m_hideAfterTimer = 0.0f;
         m_triggered = false;
         if(FadeIn)
@@ -115,32 +120,38 @@ public class TriggerFadeObjects : MonoBehaviour
     public bool IsFinished()
     {
         bool returnValue = true;
-        if (FadeIn)
+
+        if(HideAfter > 0f || Flash == true || StartDelay > 0f)
+        {
+            return true;
+        }
+
+        else if (FadeIn)
         {
             if (TextObject)
             {
-                if (TextObject.GetComponent<TextMeshPro>().color.a != 1.0f)
+                if (TextObject.GetComponent<TextMeshPro>().color.a <= 0.9f)
                 {
                     returnValue = false;
                 }
             }
             if (TargetLight)
             {
-                if (TargetLight.intensity != TargetLightIntensity)
+                if (TargetLight.intensity <= TargetLightIntensity - 0.1f)
                 {
                     returnValue = false;
                 }
             }
             if (Target3DObject)
             {
-                if (Target3DObject.GetComponent<MeshRenderer>().material.color.a != 1.0f)
+                if (Target3DObject.GetComponent<MeshRenderer>().material.color.a <= 0.9f)
                 {
                     returnValue = false;
                 }
             }
             if (Target2DObject)
             {
-                if (Target2DObject.GetComponent<SpriteRenderer>().color.a != 1.0f)
+                if (Target2DObject.GetComponent<SpriteRenderer>().color.a <= 0.9f)
                 {
                     returnValue = false;
                 }
@@ -150,28 +161,28 @@ public class TriggerFadeObjects : MonoBehaviour
         {
             if (TextObject)
             {
-                if (TextObject.GetComponent<TextMeshPro>().color.a > 0.0f)
+                if (TextObject.GetComponent<TextMeshPro>().color.a >= 0.1f)
                 {
                     returnValue = false;
                 }
             }
             if (TargetLight)
             {
-                if (TargetLight.intensity > 0.0f)
+                if (TargetLight.intensity >= 0.1f)
                 {
                     returnValue = false;
                 }
             }
             if (Target3DObject)
             {
-                if (Target3DObject.GetComponent<MeshRenderer>().material.color.a > 0.0f)
+                if (Target3DObject.GetComponent<MeshRenderer>().material.color.a >= 0.1f)
                 {
                     returnValue = false;
                 }
             }
             if (Target2DObject)
             {
-                if (Target2DObject.GetComponent<SpriteRenderer>().color.a > 0.0f)
+                if (Target2DObject.GetComponent<SpriteRenderer>().color.a >= 0.1f)
                 {
                     returnValue = false;
                 }
@@ -183,7 +194,7 @@ public class TriggerFadeObjects : MonoBehaviour
 
     public void Finish()
     {
-        if (FadeIn)
+        if (FadeIn && HideAfter <= 0f)
         {
             if (TextObject)
             {
@@ -233,6 +244,9 @@ public class TriggerFadeObjects : MonoBehaviour
                 Target2DObject.GetComponent<SpriteRenderer>().color = rColor;
             }
         }
+        m_triggered = true;
+        m_hideAfterTimer = HideAfter;
+        m_startTimer = StartDelay;
     }
 
     // Update is called once per frame
@@ -240,6 +254,12 @@ public class TriggerFadeObjects : MonoBehaviour
     {
         if (m_triggered)
         {
+            if(m_startTimer < StartDelay)
+            {
+                m_startTimer += Time.deltaTime;
+                return;
+            }
+
             if (FadeIn)
                 HandledFadeIn();
             else
@@ -250,7 +270,13 @@ public class TriggerFadeObjects : MonoBehaviour
                 m_hideAfterTimer += Time.deltaTime;
                 if (m_hideAfterTimer > HideAfter)
                 {
-                    FadeIn = false;
+                    if (!Flash)
+                        FadeIn = false;
+                    else {
+                        m_hideAfterTimer = 0f;
+                        HideAfter = FlashTime;
+                        FadeIn = !FadeIn;
+                    }
                 }
             }
         }
