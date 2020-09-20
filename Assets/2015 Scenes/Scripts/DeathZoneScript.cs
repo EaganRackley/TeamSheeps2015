@@ -4,7 +4,8 @@ using System.Collections;
 
 public class DeathZoneScript : MonoBehaviour {
 
-	public MonoBehaviour Player1;
+    public string SceneToLoad = "TitleScreen2020.unity";
+    public MonoBehaviour Player1;
 	public MonoBehaviour Player2;
 	public MeshRenderer WhiteQuad;
 	public MeshRenderer WhatDoWeDoNow;
@@ -98,7 +99,7 @@ public class DeathZoneScript : MonoBehaviour {
 		if (m_EndingTriggered == true) 
 		{	
 			if (!DeathThemeTogether.GetComponent<AudioSource>().isPlaying && m_EndingSongPlayed == true) {
-				SceneManager.LoadScene("SplashScreen");
+				SceneManager.LoadScene(SceneToLoad);
 			}
 			// Fade out primary music
 			HandleMusicFade();

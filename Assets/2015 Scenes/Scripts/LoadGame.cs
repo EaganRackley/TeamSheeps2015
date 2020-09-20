@@ -5,10 +5,12 @@ using System.Collections;
 public class LoadGame : MonoBehaviour {
 
     public sound music;
+    public float TriggerLoadAfter = 120f;
     private bool isLoadingNewScene = false;
     private AsyncOperation async;
     private float myLoadingTimer = 0f;
     private float myWaitForFinishedTimer = 0f;
+    private float myTriggerLoadTimer = 0f;
 
     public TriggerSwitchCamera TriggerCamera;
     public TriggerFadeObjects[] TriggerFades;
@@ -16,6 +18,7 @@ public class LoadGame : MonoBehaviour {
     void Start()
     {
         myLoadingTimer = 0f;
+        myTriggerLoadTimer = 0f;
         music.increaseVolume(0.5f);
     }
 
@@ -75,7 +78,10 @@ public class LoadGame : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
-        if (Input.GetButton("Fire1") || Input.anyKey && !isLoadingNewScene)
+
+        myTriggerLoadTimer += Time.deltaTime;
+
+        if (myTriggerLoadTimer > TriggerLoadAfter || Input.GetButton("Fire1") || Input.anyKey && !isLoadingNewScene)
         {
             if (TransitionsAreFinished())
             {
@@ -101,9 +107,13 @@ public class LoadGame : MonoBehaviour {
         {
             music.fadeMusic();
             myLoadingTimer += Time.deltaTime;
-            if(myLoadingTimer > 3f)
+            if (myLoadingTimer > 3f && myTriggerLoadTimer >= TriggerLoadAfter)
             {
-                SceneManager.LoadScene("Cabinet2020");
+                SceneManager.LoadScene("TitleScreen2020");
+            }
+            else
+            {
+                SceneManager.LoadScene("TitleScreen2020");
             }
         }
     }

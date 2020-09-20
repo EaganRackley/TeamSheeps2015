@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 public class EventManager : MonoBehaviour 
 {
+    public float LifeSpentOffset = 0f;
     Transform topLeft;
     Transform bottomRight;
 	
@@ -44,6 +45,7 @@ public class EventManager : MonoBehaviour
 
     void Start()
     {
+        m_lifeSpent = LifeSpentOffset;
         eventList = new List<TimedEvent>();
     }
 
