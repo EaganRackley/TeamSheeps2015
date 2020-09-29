@@ -22,7 +22,7 @@ public class DeathZoneScript : MonoBehaviour {
 	{
 		// Set both materials to transparent so we can play the game.
 		Color newColor = WhiteQuad.GetComponent<Renderer>().material.color;
-		newColor.a = 0;
+		newColor.a = 1;
 		WhiteQuad.GetComponent<Renderer>().material.color = newColor;
 
 		newColor = WhatDoWeDoNow.GetComponent<Renderer>().material.color;
@@ -64,7 +64,19 @@ public class DeathZoneScript : MonoBehaviour {
 		return true;
 	}
 
-	bool HandledTextFadeIn()
+    // Handles fading out the white quad
+    void HandledWhiteFadeOut()
+    {
+        if (WhiteQuad.GetComponent<Renderer>().material.color.a > 0f)
+        {
+            // Set both materials to transparent so we can play the game.
+            Color newColor = WhiteQuad.GetComponent<Renderer>().material.color;
+            newColor.a -= 0.25f * Time.deltaTime;
+            WhiteQuad.GetComponent<Renderer>().material.color = newColor;
+        }
+    }
+
+    bool HandledTextFadeIn()
 	{
 		if (DeathThemeTogether.GetComponent<AudioSource>().isPlaying == false)
 						DeathThemeTogether.GetComponent<AudioSource>().Play ();
@@ -96,21 +108,26 @@ public class DeathZoneScript : MonoBehaviour {
 
 	void Update()
 	{
-		if (m_EndingTriggered == true) 
-		{	
-			if (!DeathThemeTogether.GetComponent<AudioSource>().isPlaying && m_EndingSongPlayed == true) {
-				SceneManager.LoadScene(SceneToLoad);
-			}
-			// Fade out primary music
-			HandleMusicFade();
-			// Fade in blank display
-			if( HandledWhiteFadeIn() )
-			{
-				// Fase in text
-				if( HandledTextFadeIn() )
-				{
-				}
-			}
-		}
+        if (m_EndingTriggered == true)
+        {
+            if (!DeathThemeTogether.GetComponent<AudioSource>().isPlaying && m_EndingSongPlayed == true)
+            {
+                SceneManager.LoadScene(SceneToLoad);
+            }
+            // Fade out primary music
+            HandleMusicFade();
+            // Fade in blank display
+            if (HandledWhiteFadeIn())
+            {
+                // Fase in text
+                if (HandledTextFadeIn())
+                {
+                }
+            }
+        }
+        else
+        {
+            HandledWhiteFadeOut();
+        }
 	}
 }

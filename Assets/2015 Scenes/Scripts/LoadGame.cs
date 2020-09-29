@@ -109,11 +109,11 @@ public class LoadGame : MonoBehaviour {
             myLoadingTimer += Time.deltaTime;
             if (myLoadingTimer > 3f && myTriggerLoadTimer >= TriggerLoadAfter)
             {
-                SceneManager.LoadScene("TitleScreen2020");
+                SceneManager.LoadScene("Cabinet2020_Demo");
             }
             else
             {
-                SceneManager.LoadScene("TitleScreen2020");
+                SceneManager.LoadScene("Cabinet2020");
             }
         }
     }
