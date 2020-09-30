@@ -15,7 +15,6 @@ public class SickPlayer : MonoBehaviour {
 	public GameObject playerDeathShroud;
     private float m_startingSpeed;
     private int m_offScreenCount;
-    private float m_debounceOffscreenTimer;
     private bool m_isDying;
     private float m_offsetSpeed = 0f;
 
@@ -24,7 +23,6 @@ public class SickPlayer : MonoBehaviour {
     void Start () {
         m_isDying = false;
         m_offScreenCount = 0;
-        m_debounceOffscreenTimer = 0f;
         this.playerComponent = GetComponent<PlayerController>();
         this.playerComponent.speed = this.playerComponent.speed * 0.75f;
         m_startingSpeed = this.playerComponent.speed;

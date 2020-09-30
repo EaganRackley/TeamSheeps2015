@@ -102,7 +102,7 @@ public class DeathZoneScript : MonoBehaviour {
 		} 
 		else if (other.tag == "Player2") 
 		{
-			DestroyObject(other.gameObject);
+			GameObject.Destroy(other.gameObject);
 		}
 	}
 
