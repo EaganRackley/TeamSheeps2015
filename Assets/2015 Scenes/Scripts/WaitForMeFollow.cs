@@ -37,6 +37,10 @@ public class WaitForMeFollow : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(PlayerToFollow == null)
+        {
+            return;
+        }
         // If not following, fade graphic out (we will start there)
         if (!PlayerToFollow.Following || !PlayerToFollow.ShowingDialog)
         {

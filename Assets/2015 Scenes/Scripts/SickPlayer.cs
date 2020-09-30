@@ -17,6 +17,7 @@ public class SickPlayer : MonoBehaviour {
     private int m_offScreenCount;
     private float m_debounceOffscreenTimer;
     private bool m_isDying;
+    private float m_offsetSpeed = 0f;
 
 
     // Use this for initialization
@@ -73,7 +74,7 @@ public class SickPlayer : MonoBehaviour {
             if (playerComponent.speed <= m_startingSpeed && !m_isDying)
             {
                 Color col = GetComponent<SpriteRenderer>().color;
-                col.a = playerComponent.speed > 0f ? (playerComponent.speed / m_startingSpeed) : 0f;
+                col.a = playerComponent.speed > 0f ? ((playerComponent.speed - m_offsetSpeed) / m_startingSpeed) : 0f;
                 GetComponent<SpriteRenderer>().color = col;
                 if(col.a <= 0.05f)
                 {
@@ -148,8 +149,10 @@ public class SickPlayer : MonoBehaviour {
         player.Following = true;
         player.ShowingDialog = true;
         player.speed += 1f;
+        m_offsetSpeed += 1f;
         yield return new WaitForSeconds(5f);
         player.speed -= 1f;
+        m_offsetSpeed -= 1f;
         player.Following = false;
         player.ShowingDialog = false;
     }

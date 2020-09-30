@@ -8,34 +8,36 @@ public class FallingBlockScript : MonoBehaviour
     public float FadeOffset = 0f; // Determines how much time before other objects fall that this object will fade.
     public bool AllowExtraLife = false;
     public float ExtraLifeSpan = 20f;
-
     private bool m_ExtraLifeGiven = false;
-
-    private float m_lifetime = 300.0f;
     private float m_destroyAfter = 310.0f;
     public float ShakeTime = 2.0f;
     public float MinShakeMagnitude = 0.01f;
     public float MaxShakeMagnitude = 0.1f;
     private float m_maxFallOffset = 5.0f;
-    private float m_fallTimeStart = 80.0f; //180f
-
+    private float m_lifetime = 420.0f; // m_fallTimeStart + 120f
+    private float m_fallTimeStart = 300.0f; //180f
     private float m_LifeSpent = 0.0f;
     private float m_CurrentShakeMag = 0.0f;
     private Vector3 m_StartPosition;
-
     private EventManager m_eventManager;
-
     private const float FallTimeMultiplier = 1.9f;
+    private Rigidbody m_rigidbody;
+    private ParticleSystem m_particleSystem;
+    private SpriteRenderer m_spriteRenderer;
+    SpriteRenderer[] m_srList;
+
 
     void Start()
     {
         m_LifeSpent = 0f;
-
         m_eventManager = FindObjectOfType<EventManager>();
+        Rigidbody m_rigidbody = GetComponent<Rigidbody>();
+        ParticleSystem m_particleSystem = GetComponent<ParticleSystem>();
+        m_spriteRenderer = GetComponent<SpriteRenderer>();
+        m_srList = GetComponentsInChildren<SpriteRenderer>();
 
         // Set Lifetime and Destroy After based on X position
         Vector3 worldPosition = this.transform.position;
-
         if (worldPosition.x <= 0)
         {
             m_lifetime = m_fallTimeStart - (-worldPosition.x * FallTimeMultiplier);
@@ -46,7 +48,6 @@ public class FallingBlockScript : MonoBehaviour
             m_lifetime = m_fallTimeStart - (worldPosition.x * FallTimeMultiplier);
             m_destroyAfter = m_lifetime + 10;
         }
-
         m_maxFallOffset = 0.5f;
         float rangeAdjustment = Random.Range(0.01f, m_maxFallOffset) - m_maxFallOffset / 2.0f;
         m_CurrentShakeMag = MinShakeMagnitude;
@@ -82,22 +83,21 @@ public class FallingBlockScript : MonoBehaviour
         this.transform.position = pos;
     }
 
-    
+
     void FadeAlpha()
     {
         // Fade our sprite
-        if(GetComponent<SpriteRenderer>() != null)
+        if(m_spriteRenderer != null)
         {
-            Color current = GetComponent<SpriteRenderer>().color;
+            Color current = m_spriteRenderer.color;
             if (current.a > 0f)
                 current.a -= Time.deltaTime;
-            GetComponent<SpriteRenderer>().color = current;
+            m_spriteRenderer.color = current;
         }
         // Fade all child sprites too
-        SpriteRenderer[] srList = GetComponentsInChildren<SpriteRenderer>();
-        if(srList.Length > 0)
+        if(m_srList.Length > 0)
         { 
-            foreach (SpriteRenderer sr in srList)
+            foreach (SpriteRenderer sr in m_srList)
             {
                 if (sr != null)
                 {
@@ -111,7 +111,7 @@ public class FallingBlockScript : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         m_LifeSpent = m_eventManager.lifeSpent;
         if(m_ExtraLifeGiven)
@@ -119,26 +119,26 @@ public class FallingBlockScript : MonoBehaviour
             m_LifeSpent -= ExtraLifeSpan;
         }
 
-        //// Esnure physics doesn't toss our tiles into the air
+        //// Ensure physics doesn't toss our tiles into the air
         //if (this.transform.position.z < 0f)
         //{
         //    Vector3 pos = this.transform.position;
         //    //pos.z = 0f;
         //    this.transform.position = pos;
         //}
-
+        
         // Trigger a particle effect if this tile was given extra life
         if (AllowExtraLife && m_ExtraLifeGiven)
         {
-            if (m_LifeSpent + ExtraLifeSpan > m_lifetime - FadeOffset && GetComponent<Rigidbody>().isKinematic && GetComponentInChildren<ParticleSystem>() != null)
+            if (m_rigidbody && m_LifeSpent + ExtraLifeSpan > m_lifetime - FadeOffset && m_rigidbody.isKinematic && m_particleSystem != null)
             {
-                if (!GetComponentInChildren<ParticleSystem>().isPlaying)
-                    GetComponentInChildren<ParticleSystem>().Play();
+                if (m_particleSystem && !m_particleSystem.isPlaying)
+                    m_particleSystem.Play();
             }
-            else if(!GetComponent<Rigidbody>().isKinematic)
+            else if(m_rigidbody && !m_rigidbody.isKinematic)
             {
-                if (GetComponentInChildren<ParticleSystem>().isPlaying)
-                    GetComponentInChildren<ParticleSystem>().Stop();
+                if (m_particleSystem.isPlaying)
+                    m_particleSystem.Stop();
             }
         }
 
@@ -163,10 +163,10 @@ public class FallingBlockScript : MonoBehaviour
 
             if (m_LifeSpent > m_lifetime)
             {
-                if(this.GetComponent<Rigidbody>() != null)
+                if(m_rigidbody != null)
                 { 
-                    this.GetComponent<Rigidbody>().isKinematic = false;
-                    this.GetComponent<Rigidbody>().WakeUp();
+                    m_rigidbody.isKinematic = false;
+                    m_rigidbody.WakeUp();
                 }
             }
             if (m_LifeSpent > m_destroyAfter)
@@ -174,7 +174,5 @@ public class FallingBlockScript : MonoBehaviour
                 Destroy(this.gameObject);
             }
         }
-
-        
     }
 }

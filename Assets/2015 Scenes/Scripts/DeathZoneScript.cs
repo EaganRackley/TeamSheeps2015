@@ -127,7 +127,7 @@ public class DeathZoneScript : MonoBehaviour {
         }
         else
         {
-            HandledWhiteFadeOut();
+                HandledWhiteFadeOut();
         }
 	}
 }

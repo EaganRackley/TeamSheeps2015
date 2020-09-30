@@ -11,6 +11,7 @@ public class LoadGame : MonoBehaviour {
     private float myLoadingTimer = 0f;
     private float myWaitForFinishedTimer = 0f;
     private float myTriggerLoadTimer = 0f;
+    private bool m_fireWasPressed = false;
 
     public TriggerSwitchCamera TriggerCamera;
     public TriggerFadeObjects[] TriggerFades;
@@ -20,6 +21,7 @@ public class LoadGame : MonoBehaviour {
         myLoadingTimer = 0f;
         myTriggerLoadTimer = 0f;
         music.increaseVolume(0.5f);
+        m_fireWasPressed = false;
     }
 
     void FinishAllTransitions()
@@ -77,17 +79,19 @@ public class LoadGame : MonoBehaviour {
     //}
 
     // Update is called once per frame
-    void Update () {
+    void Update() {
 
         myTriggerLoadTimer += Time.deltaTime;
+        bool FirePressed = (Input.GetButton("Fire1") || Input.anyKey);
 
-        if (myTriggerLoadTimer > TriggerLoadAfter || Input.GetButton("Fire1") || Input.anyKey && !isLoadingNewScene)
+        if (myTriggerLoadTimer > TriggerLoadAfter || FirePressed && !isLoadingNewScene)
         {
             if (TransitionsAreFinished())
             {
                 myWaitForFinishedTimer += Time.deltaTime;
                 if(myWaitForFinishedTimer > 0.10f)
                 {
+                    m_fireWasPressed = FirePressed;
                     isLoadingNewScene = true;
                     var fadeObjects = FindObjectsOfType<FadeFromWhite>();
                     foreach (FadeFromWhite fade in fadeObjects)
@@ -111,7 +115,7 @@ public class LoadGame : MonoBehaviour {
             {
                 SceneManager.LoadScene("Cabinet2020_Demo");
             }
-            else
+            else if(m_fireWasPressed && myLoadingTimer > 3f)
             {
                 SceneManager.LoadScene("Cabinet2020");
             }
