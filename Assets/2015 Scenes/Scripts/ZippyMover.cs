@@ -4,7 +4,7 @@ using System.Collections;
 public class ZippyMover : MonoBehaviour {
 
 	public float moveSpeed;
-	
+    public bool LimitX = false;
 	public float timePerTurningDirection;
 	public float randomTimePerTurningDirection;
 	public float turnSpeed;
@@ -32,8 +32,28 @@ public class ZippyMover : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		MoveUpDown();
-		MoveAround();
-	}
+        MoveAround();
+        if (LimitX)
+        {
+            if (this.transform.position.x < -0.0f) //-3
+            {
+                currentDirection = 360f;
+            }
+            else if (this.transform.position.x > 4f) //8
+            {
+                currentDirection = 180;
+            }
+
+            if (this.transform.position.y > 60.0f)
+            {
+                currentDirection = 270f;
+            }
+            else if (this.transform.position.y < 32f)
+            {
+                currentDirection = 90f;
+            }
+        }
+    }
 
 	void MoveUpDown()
 	{
