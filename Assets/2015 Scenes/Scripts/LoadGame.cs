@@ -5,6 +5,7 @@ using System.Collections;
 public class LoadGame : MonoBehaviour {
 
     public sound music;
+    public SpriteRenderer WhiteQuad;
     public float TriggerLoadAfter = 120f;
     private bool isLoadingNewScene = false;
     private AsyncOperation async;
@@ -18,6 +19,11 @@ public class LoadGame : MonoBehaviour {
 
     void Start()
     {
+        // Set both materials to transparent so we can play the game.
+        Color newColor = WhiteQuad.material.color;
+        newColor.a = 1;
+        WhiteQuad.material.color = newColor;
+
         myLoadingTimer = 0f;
         myTriggerLoadTimer = 0f;
         music.increaseVolume(0.5f);
@@ -78,6 +84,17 @@ public class LoadGame : MonoBehaviour {
     //    yield return async;
     //}
 
+    void HandledWhiteFadeOut()
+    {
+        if (WhiteQuad.material.color.a > 0f)
+        {
+            // Set both materials to transparent so we can play the game.
+            Color newColor = WhiteQuad.material.color;
+            newColor.a -= 0.25f * Time.deltaTime;
+            WhiteQuad.material.color = newColor;
+        }
+    }
+
     // Update is called once per frame
     void Update() {
 
@@ -107,7 +124,7 @@ public class LoadGame : MonoBehaviour {
             }
             //StartCoroutine("LoadLevelAsync");
         }
-        if(isLoadingNewScene)
+        else if(isLoadingNewScene)
         {
             music.fadeMusic();
             myLoadingTimer += Time.deltaTime;
@@ -119,6 +136,10 @@ public class LoadGame : MonoBehaviour {
             {
                 SceneManager.LoadScene("Cabinet2020");
             }
+        }
+        else
+        {
+            HandledWhiteFadeOut();
         }
     }
 
