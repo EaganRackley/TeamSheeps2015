@@ -4,6 +4,7 @@ using System.Collections;
 [RequireComponent(typeof(PlayerController))]
 public class SickPlayer : MonoBehaviour {
 
+    public float StartingHealthOffset = 0f;
     public const float SPEED_DECREASE_DELTA = 0.01f;
     public const float DECREASE_SPEED_EVERY = 1.00f; //in seconds
     private float speedDecreaseTimer = DECREASE_SPEED_EVERY;
@@ -39,17 +40,34 @@ public class SickPlayer : MonoBehaviour {
 
 		Vector3 pos = this.transform.position;
 
-		for(int i = 0; i < 2; i++)
-		{
-            Vector3 spawnPosition = new Vector3(Random.Range(pos.x - 0.27f, pos.x + 0.27f),
-                                            Random.Range(pos.y - 0.27f, pos.y + 0.27f),
-                                            pos.z - Random.Range(0.8f, 1.25f));
-			Instantiate(prefabToSpawnOnDeath, spawnPosition, Quaternion.identity);
-		}
+		//for(int i = 0; i < 2; i++)
+		//{
+        //    Vector3 spawnPosition = new Vector3(Random.Range(pos.x - 0.27f, pos.x + 0.27f),
+        //                                    Random.Range(pos.y - 0.27f, pos.y + 0.27f),
+        //                                    pos.z - Random.Range(0.8f, 1.25f));
+		//	Instantiate(prefabToSpawnOnDeath, spawnPosition, Quaternion.identity);
+		//}
 	}
 	
 	// Update is called once per frame
 	void Update () {
+
+        // Have our sick player sprite fade as it gets sicker and sicker.
+        if (playerComponent.speed <= m_startingSpeed && !m_isDying)
+        {
+            Color col = GetComponent<SpriteRenderer>().color;
+            col.a = playerComponent.speed > 0f ? ((playerComponent.speed - m_offsetSpeed) / m_startingSpeed) : 0f;
+            GetComponent<SpriteRenderer>().color = col;
+            if (col.a <= 0.05f)
+            {
+                m_isDying = true;
+            }
+        }
+
+        if (StartingHealthOffset > 0f) { 
+            this.playerComponent.speed -= StartingHealthOffset;
+            StartingHealthOffset = 0f;
+        }
 
         if (m_isDying)
             HandleDying();
@@ -68,18 +86,6 @@ public class SickPlayer : MonoBehaviour {
                 playerComponent.speed -= SPEED_DECREASE_DELTA;
             }
 
-            // Have our sick player sprite fade as it gets sicker and sicker.
-            if (playerComponent.speed <= m_startingSpeed && !m_isDying)
-            {
-                Color col = GetComponent<SpriteRenderer>().color;
-                col.a = playerComponent.speed > 0f ? ((playerComponent.speed - m_offsetSpeed) / m_startingSpeed) : 0f;
-                GetComponent<SpriteRenderer>().color = col;
-                if(col.a <= 0.05f)
-                {
-                    m_isDying = true;
-                }
-            }
-
             //if(playerComponent.speed <= 2f)
             //{
             //    Color col = GetComponent<SpriteRenderer>().color;
@@ -89,12 +95,12 @@ public class SickPlayer : MonoBehaviour {
         }
         if (!InCameraView())
         {
-            if (!playerComponent.Following && m_offScreenCount < 1)
+            if (!playerComponent.Following && m_offScreenCount < 5)
             {
                 playerComponent.GetPowerup(this.PowerupFunction);
                 m_offScreenCount++;
             }
-            else if(!playerComponent.Following && m_offScreenCount >= 1)
+            else if(!playerComponent.Following && m_offScreenCount >= 5)
             {
                 m_isDying = true;
             }

@@ -1,16 +1,24 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using TMPro;
 
 public class EventManager : MonoBehaviour 
 {
     public float LifeSpentOffset = 0f;
+    public TextMeshProUGUI ScoreBoard;
+    
     Transform topLeft;
     Transform bottomRight;
 	
     float gameStartTime;
 
     float m_lifeSpent;
-
+    private int m_score;
+    public int Score
+    {
+        get { return m_score; }
+        set { m_score = value; }
+    }
     public float lifeSpent
     {
         get
@@ -129,6 +137,9 @@ public class EventManager : MonoBehaviour
     void Update()
     {
         m_lifeSpent += Time.deltaTime;
+
+        if(ScoreBoard)
+            ScoreBoard.text = Score.ToString();
 
         if (eventList == null)
         {

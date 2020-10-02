@@ -14,8 +14,8 @@ public class FallingBlockScript : MonoBehaviour
     public float MinShakeMagnitude = 0.01f;
     public float MaxShakeMagnitude = 0.1f;
     private float m_maxFallOffset = 5.0f;
-    private float m_lifetime = 300.0f; // m_fallTimeStart + 120f
-    private float m_fallTimeStart = 180.0f; //180f
+    private float m_lifetime = 420.0f; // m_fallTimeStart + 120f
+    private float m_fallTimeStart = 360.0f; //180f
     private float m_LifeSpent = 0.0f;
     private float m_CurrentShakeMag = 0.0f;
     private Vector3 m_StartPosition;
@@ -32,7 +32,7 @@ public class FallingBlockScript : MonoBehaviour
         m_LifeSpent = 0f;
         m_eventManager = FindObjectOfType<EventManager>();
         m_rigidbody = GetComponent<Rigidbody>();
-        m_particleSystem = GetComponent<ParticleSystem>();
+        m_particleSystem = GetComponentInChildren<ParticleSystem>();
         m_spriteRenderer = GetComponent<SpriteRenderer>();
         m_srList = GetComponentsInChildren<SpriteRenderer>();
 

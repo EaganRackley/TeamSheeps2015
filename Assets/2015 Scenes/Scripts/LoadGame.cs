@@ -101,12 +101,12 @@ public class LoadGame : MonoBehaviour {
         myTriggerLoadTimer += Time.deltaTime;
         bool FirePressed = (Input.GetButton("Fire1") || Input.anyKey);
 
-        if (myTriggerLoadTimer > TriggerLoadAfter || FirePressed && !isLoadingNewScene)
+        if (!isLoadingNewScene && (myTriggerLoadTimer > TriggerLoadAfter || FirePressed) )
         {
             if (TransitionsAreFinished())
             {
                 myWaitForFinishedTimer += Time.deltaTime;
-                if(myWaitForFinishedTimer > 0.10f)
+                if(myWaitForFinishedTimer > 0.10f && !isLoadingNewScene)
                 {
                     m_fireWasPressed = FirePressed;
                     isLoadingNewScene = true;

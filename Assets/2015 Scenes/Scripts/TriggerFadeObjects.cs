@@ -5,6 +5,7 @@ using TMPro;
 
 public class TriggerFadeObjects : MonoBehaviour
 {
+    public bool FadeThickness = false;
     private bool m_triggered;
     public float StartDelay = 0f;
     public bool Flash = false;
@@ -34,6 +35,10 @@ public class TriggerFadeObjects : MonoBehaviour
                 Color rColor = TextObject.GetComponent<TextMeshPro>().color;
                 rColor.a = 0f;
                 TextObject.GetComponent<TextMeshPro>().color = rColor;
+                if (FadeThickness)
+                {
+                    TextObject.outlineWidth = 1f;
+                }
             }
             if (TargetLight)
             {
@@ -71,6 +76,10 @@ public class TriggerFadeObjects : MonoBehaviour
             Color rColor = TextObject.GetComponent<TextMeshPro>().color;
             rColor.a = Mathf.Lerp(rColor.a, 1.0f, Time.deltaTime / FadeSpeed);
             TextObject.GetComponent<TextMeshPro>().color = rColor;
+            if(FadeThickness)
+            {
+                TextObject.outlineWidth = Mathf.Lerp(TextObject.outlineWidth, 0.0f, 3f*Time.deltaTime / FadeSpeed);
+            }
         }
         if (TargetLight)
         {

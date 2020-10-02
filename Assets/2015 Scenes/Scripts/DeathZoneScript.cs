@@ -13,6 +13,7 @@ public class DeathZoneScript : MonoBehaviour {
 	public AudioSource MainTheme;
 	public AudioSource TogetherTheme;
 	public AudioSource DeathThemeTogether;
+    public GameObject ScoreBoard;
 
 	public bool m_EndingSongPlayed = false;
 	bool m_EndingTriggered = false;
@@ -44,8 +45,8 @@ public class DeathZoneScript : MonoBehaviour {
 		{
 			if(MainTheme != null)
                 MainTheme.GetComponent<AudioSource>().volume -= (0.2f * Time.deltaTime);
-			if(TogetherTheme != null)
-				TogetherTheme.GetComponent<AudioSource>().volume -= (0.2f * Time.deltaTime);
+			//if(TogetherTheme != null)
+			//	TogetherTheme.GetComponent<AudioSource>().volume -= (0.2f * Time.deltaTime);
 			return false;
 		}
 
@@ -110,14 +111,20 @@ public class DeathZoneScript : MonoBehaviour {
 
 	void Update()
 	{
-        bool FirePressed = (Input.GetButton("Fire1") || Input.anyKey);
-        if(FirePressed)
-        {
-            m_EndingTriggered = true;
+        if(AllowKeypressToTerminate) { 
+            bool FirePressed = (Input.GetButton("Fire1") || Input.anyKey);
+            if(FirePressed)
+            {
+                m_EndingTriggered = true;
+            }
         }
 
         if (m_EndingTriggered == true)
         {
+            if(ScoreBoard && ScoreBoard.activeSelf == true)
+            {
+                ScoreBoard.SetActive(false);
+            }
             if (HandledWhiteFadeIn() && !DeathThemeTogether.GetComponent<AudioSource>().isPlaying && m_EndingSongPlayed == true)
             {
                 SceneManager.LoadScene(SceneToLoad);
