@@ -53,6 +53,8 @@ public class EventManager : MonoBehaviour
 
     void Start()
     {
+        // Turn off the cursor for the entire application
+        Cursor.visible = false;
         m_lifeSpent = LifeSpentOffset;
         eventList = new List<TimedEvent>();
     }
@@ -63,13 +65,13 @@ public class EventManager : MonoBehaviour
         this.bottomRight = GameObject.FindGameObjectWithTag("BottomRight").transform;
 
         //Add your own game events here!
-		AddEvent(SpawnTwentyButterflies,20);
-		AddEvent(SpawnSpeedPowerUps,    30);
-		AddEvent(SpawnLanternPowerUps,  30);
-        AddEvent(SpawnTwentyFireflies,  60);
-        AddEvent(SpawnFiftyFireflies,  115);
-		AddEvent(SpawnSpeedPowerUps,   120);
-		AddEvent(SpawnLanternPowerUps, 120);
+		//AddEvent(SpawnTwentyButterflies,20);
+		//AddEvent(SpawnSpeedPowerUps,    30);
+		//AddEvent(SpawnLanternPowerUps,  30);
+        //AddEvent(SpawnTwentyFireflies,  60);
+        //AddEvent(SpawnFiftyFireflies,  115);
+		//AddEvent(SpawnSpeedPowerUps,   120);
+		//AddEvent(SpawnLanternPowerUps, 120);
 
         //TODO: Make this called when user enters game from start menu.
         StartGame();

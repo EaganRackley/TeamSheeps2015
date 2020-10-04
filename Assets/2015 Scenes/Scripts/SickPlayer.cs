@@ -95,12 +95,12 @@ public class SickPlayer : MonoBehaviour {
         }
         if (!InCameraView())
         {
-            if (!playerComponent.Following && m_offScreenCount < 5)
+            if (!playerComponent.Following && m_offScreenCount < 10)
             {
                 playerComponent.GetPowerup(this.PowerupFunction);
                 m_offScreenCount++;
             }
-            else if(!playerComponent.Following && m_offScreenCount >= 5)
+            else if(!playerComponent.Following && m_offScreenCount >= 10)
             {
                 m_isDying = true;
             }

@@ -17,6 +17,7 @@ public class TriggerFadeObjects : MonoBehaviour
     public GameObject Target2DObject;
     public Light TargetLight;
     public TextMeshPro TextObject;
+    public TextMeshProUGUI TextGUIObject;
     public float HideAfter = 0.0f;
     private float m_hideAfterTimer = 0.0f;
     private float m_startTimer = 0.0f;
@@ -39,6 +40,11 @@ public class TriggerFadeObjects : MonoBehaviour
                 {
                     TextObject.outlineWidth = 1f;
                 }
+            }
+            if (TextGUIObject)
+            {
+                Color rColor = TextObject.GetComponent<TextMeshProUGUI>().color;
+                rColor.a = 0f;
             }
             if (TargetLight)
             {
@@ -81,6 +87,12 @@ public class TriggerFadeObjects : MonoBehaviour
                 TextObject.outlineWidth = Mathf.Lerp(TextObject.outlineWidth, 0.0f, 3f*Time.deltaTime / FadeSpeed);
             }
         }
+        if(TextGUIObject)
+        {
+            Color rColor = TextGUIObject.GetComponent<TextMeshProUGUI>().color;
+            rColor.a = Mathf.Lerp(rColor.a, 1.0f, Time.deltaTime / FadeSpeed);
+            TextGUIObject.GetComponent<TextMeshProUGUI>().color = rColor;
+        }
         if (TargetLight)
         {
             TargetLight.intensity = Mathf.Lerp(TargetLight.intensity, TargetLightIntensity, Time.deltaTime / FadeSpeed);
@@ -107,6 +119,12 @@ public class TriggerFadeObjects : MonoBehaviour
             Color rColor = TextObject.GetComponent<TextMeshPro>().color;
             rColor.a = Mathf.MoveTowards(rColor.a, 0.0f, Time.deltaTime / FadeSpeed);
             TextObject.GetComponent<TextMeshPro>().color = rColor;
+        }
+        if (TextGUIObject)
+        {
+            Color rColor = TextGUIObject.GetComponent<TextMeshProUGUI>().color;
+            rColor.a = Mathf.MoveTowards(rColor.a, 0.0f, Time.deltaTime / FadeSpeed);
+            TextGUIObject.GetComponent<TextMeshProUGUI>().color = rColor;
         }
         if (TargetLight)
         {
@@ -140,6 +158,13 @@ public class TriggerFadeObjects : MonoBehaviour
             if (TextObject)
             {
                 if (TextObject.GetComponent<TextMeshPro>().color.a <= 0.9f)
+                { 
+                    returnValue = false;
+                }
+            }
+            if (TextGUIObject)
+            {
+                if (TextGUIObject.GetComponent<TextMeshProUGUI>().color.a <= 0.9f)
                 {
                     returnValue = false;
                 }
@@ -171,6 +196,13 @@ public class TriggerFadeObjects : MonoBehaviour
             if (TextObject)
             {
                 if (TextObject.GetComponent<TextMeshPro>().color.a >= 0.1f)
+                {
+                    returnValue = false;
+                }
+            }
+            if (TextGUIObject)
+            {
+                if (TextGUIObject.GetComponent<TextMeshProUGUI>().color.a >= 0.1f)
                 {
                     returnValue = false;
                 }
@@ -211,6 +243,12 @@ public class TriggerFadeObjects : MonoBehaviour
                 rColor.a = 1.0f;
                 TextObject.GetComponent<TextMeshPro>().color = rColor;
             }
+            if (TextGUIObject)
+            {
+                Color rColor = TextObject.GetComponent<TextMeshProUGUI>().color;
+                rColor.a = 1.0f;
+                TextObject.GetComponent<TextMeshProUGUI>().color = rColor;
+            }
             if (TargetLight)
             {
                 TargetLight.intensity = TargetLightIntensity;
@@ -235,6 +273,12 @@ public class TriggerFadeObjects : MonoBehaviour
                 Color rColor = TextObject.GetComponent<TextMeshPro>().color;
                 rColor.a = 0.0f;
                 TextObject.GetComponent<TextMeshPro>().color = rColor;
+            }
+            if (TextGUIObject)
+            {
+                Color rColor = TextGUIObject.GetComponent<TextMeshProUGUI>().color;
+                rColor.a = 0.0f;
+                TextGUIObject.GetComponent<TextMeshProUGUI>().color = rColor;
             }
             if (TargetLight)
             {
